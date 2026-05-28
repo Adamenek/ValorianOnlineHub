@@ -4,330 +4,715 @@
 <meta charset="UTF-8">
 <title>Constitution & Codex | Kingdom of Valoria</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400 ;600&family=Cinzel+Decorative&display=swap');
-
 :root{
- 
-  --bg:#0c0b08;                 
-  --card:#14110e;               
-  --border:#4a3829;           
-  --accent:#c03;               
-  --text:#e8dfc8;           
-  --sub:#8a7d69;             
-
-
-  --gap:1.2rem;
-  font-family:"Cinzel", "Palatino Linotype", "Book Antiqua", Palatino, serif;
-  font-weight:400;
-  letter-spacing:.4px;
+  --parchment:#e6d5ac;
+  --parchment-dark:#d4c194;
+  --parchment-worn:#c9b896;
+  --ink:#1a0f0a;
+  --ink-light:#3d2b1f;
+  --burgundy:#6b0f1a;
+  --burgundy-dark:#4a0a12;
+  --gold:#b8860b;
+  --gold-light:#daa520;
+  --wood:#3e2723;
+  --wood-dark:#281815;
+  --wood-light:#5d4037;
+  --shadow:rgba(0,0,0,0.5);
+  
+  --font-gothic:'UnifrakturMaguntia', cursive;
+  --font-cinzel:'Cinzel', serif;
+  --font-body:'EB Garamond', serif;
 }
 
+*{box-sizing:border-box;margin:0;padding:0}
 
+html{background:var(--wood-dark)}
+
+/* Wood desk background with grain */
 body{
-  margin:0;
-  background:var(--bg);
-  background-image:
-    radial-gradient(circle at 25% 25%, #1a1612 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, #1a1612 1px, transparent 1px);
-  background-size:4px 4px;
-  color:var(--text);
+  font-family:var(--font-body);
+  color:var(--ink);
   min-height:100vh;
   display:flex;
   flex-direction:column;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px),
+    linear-gradient(135deg, #2a1f1a 0%, #1a120e 100%);
+  position:relative;
+  line-height:1.65;
+  font-size:1.05rem;
 }
-a{color:var(--accent);text-decoration:none}
 
-
-header,footer{
-  background:var(--card);
-  border-bottom:2px solid var(--accent);
-  box-shadow:0 2px 6px #0006;
+/* Desk surface vignette */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%);
+  pointer-events:none;
+  z-index:0;
 }
-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem}
-header h1{margin:0;font-size:1.8rem;font-family:"Cinzel Decorative",serif;letter-spacing:2px;text-shadow:1px 1px 2px #000}
-header h1 span{font-weight:400;font-size:.7em;color:var(--sub)}
-header span{font-weight:300;font-size:.9rem;color:var(--sub)}
 
-
-nav{display:flex;gap:1rem;margin-top:.5rem}
-nav a{
-  padding:.4rem .8rem;
-  border:1px solid var(--border);
-  border-radius:0;
-  background:#111;
-  transition:background .2s;
-  font-family:"Cinzel",serif;
+/* Main scroll container */
+.scroll-desk{
+  position:relative;
+  z-index:1;
+  max-width:920px;
+  margin:60px auto;
+  width:calc(100% - 40px);
 }
-nav a:hover{background:var(--accent);color:#fff}
 
+/* The parchment scroll */
+.scroll{
+  position:relative;
+  background:
+    linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 50%, var(--parchment-worn) 100%);
+  padding:70px 50px 80px;
+  box-shadow:
+    /* curled edge shadow */
+    inset 20px 0 30px -20px rgba(139,69,19,0.15),
+    inset -20px 0 30px -20px rgba(139,69,19,0.15),
+    /* outer depth */
+    0 0 0 1px var(--burgundy),
+    0 0 0 3px var(--gold),
+    0 20px 60px var(--shadow);
+  /* Slight perspective to look like it's lying on desk */
+  transform:rotate(-0.3deg);
+}
 
-main{flex:1;padding:2rem;max-width:1100px;margin:auto;width:100%}
-section{margin-bottom:2.5rem}
-h2{margin-top:0;border-left:4px solid var(--accent);padding-left:.6rem;font-size:1.4rem;font-family:"Cinzel Decorative",serif}
-h3{font-size:1.1rem;margin-top:1.2rem;font-family:"Cinzel",serif}
-p,li{line-height:1.55}
-ol{margin-left:1.2rem}
-hr{border:none;height:1px;background:var(--border);margin:2rem 0}
+/* Parchment texture */
+.scroll::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 30% 20%, rgba(139,69,19,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(160,82,45,0.05) 0%, transparent 40%);
+  pointer-events:none;
+  mix-blend-mode:multiply;
+  opacity:0.8;
+}
 
+/* Top roller (wooden bar) */
+.roller-top,
+.roller-bottom{
+  position:absolute;
+  left:-30px;
+  right:-30px;
+  height:44px;
+  background:
+    linear-gradient(to bottom,
+      var(--wood-dark) 0%,
+      var(--wood) 25%,
+      var(--wood-light) 50%,
+      var(--wood) 75%,
+      var(--wood-dark) 100%);
+  border-radius:22px;
+  border:2px solid var(--gold);
+  box-shadow:
+    0 6px 20px var(--shadow),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  z-index:2;
+}
+.roller-top{top:-22px;}
+.roller-bottom{bottom:-22px;}
 
-footer{
+/* Gold bands on rollers */
+.roller-top::before, .roller-top::after,
+.roller-bottom::before, .roller-bottom::after{
+  content:"";
+  position:absolute;
+  top:-6px;
+  width:24px;
+  height:56px;
+  background:linear-gradient(to right, var(--gold), var(--gold-light), var(--gold));
+  border-radius:4px;
+  border:1px solid var(--burgundy);
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);
+}
+.roller-top::before, .roller-bottom::before{left:25px;}
+.roller-top::after, .roller-bottom::after{right:25px;}
+
+/* Scroll edge curls */
+.scroll-edge-left,
+.scroll-edge-right{
+  position:absolute;
+  top:44px;
+  bottom:44px;
+  width:18px;
+  z-index:1;
+  pointer-events:none;
+}
+.scroll-edge-left{
+  left:0;
+  background:linear-gradient(to right, rgba(139,69,19,0.2), transparent);
+  border-left:3px solid var(--burgundy);
+}
+.scroll-edge-right{
+  right:0;
+  background:linear-gradient(to left, rgba(139,69,19,0.2), transparent);
+  border-right:3px solid var(--burgundy);
+}
+
+/* Header inside scroll */
+.scroll-header{
   text-align:center;
-  padding:1.2rem;
-  font-size:.8rem;
-  color:var(--sub);
-  border-bottom:none;
-  border-top:2px solid var(--accent);
+  margin-bottom:40px;
+  padding-bottom:25px;
+  border-bottom:3px double var(--burgundy);
+  position:relative;
+  z-index:2;
 }
-small.note{display:block;color:var(--sub);margin-top:.4rem;font-size:.85em}
+.scroll-header h1{
+  font-family:var(--font-gothic);
+  font-size:2.6rem;
+  color:var(--burgundy-dark);
+  text-shadow:2px 2px 0px rgba(0,0,0,0.1);
+  letter-spacing:1px;
+  line-height:1.2;
+}
+.scroll-header .subtitle{
+  font-family:var(--font-cinzel);
+  font-size:0.9rem;
+  color:var(--ink-light);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  display:block;
+  margin-top:8px;
+}
+.scroll-header .divider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  margin-top:12px;
+  color:var(--gold);
+  font-size:1.2rem;
+}
+.scroll-header .divider::before,
+.scroll-header .divider::after{
+  content:"";
+  display:block;
+  width:80px;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+/* Navigation tabs - styled as small hanging scroll tabs */
+.nav-tabs{
+  display:flex;
+  justify-content:center;
+  gap:1.5rem;
+  margin-bottom:30px;
+  position:relative;
+  z-index:2;
+  flex-wrap:wrap;
+}
+.nav-tab{
+  font-family:var(--font-cinzel);
+  font-size:0.8rem;
+  color:var(--burgundy);
+  text-decoration:none;
+  padding:10px 20px 14px;
+  background:linear-gradient(to bottom, var(--parchment) 0%, var(--parchment-dark) 100%);
+  border:2px solid var(--burgundy);
+  border-bottom:none;
+  border-radius:8px 8px 0 0;
+  position:relative;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  transition:all 0.2s;
+  box-shadow:0 -4px 12px rgba(0,0,0,0.2);
+}
+.nav-tab::after{
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  width:0;
+  height:0;
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:10px solid var(--burgundy);
+  opacity:0;
+  transition:opacity 0.2s;
+}
+.nav-tab:hover{
+  background:var(--burgundy);
+  color:var(--parchment);
+  transform:translateY(-4px);
+}
+.nav-tab:hover::after{opacity:1;}
+
+/* Content sections */
+section{
+  position:relative;
+  z-index:2;
+  margin-bottom:2.5rem;
+}
+
+/* Section headings with drop caps feel */
+h2{
+  font-family:var(--font-cinzel);
+  font-size:1.5rem;
+  color:var(--burgundy-dark);
+  margin:2rem 0 1rem;
+  letter-spacing:1px;
+  border-bottom:2px solid var(--gold);
+  padding-bottom:8px;
+  display:inline-block;
+  width:100%;
+}
+h2::first-letter{
+  font-family:var(--font-gothic);
+  font-size:2.2rem;
+  line-height:0.8;
+  margin-right:4px;
+  color:var(--burgundy);
+}
+
+h3{
+  font-family:var(--font-cinzel);
+  font-size:1.15rem;
+  color:var(--ink);
+  margin-top:1.5rem;
+  margin-bottom:0.6rem;
+  letter-spacing:0.5px;
+}
+h4{
+  font-family:var(--font-cinzel);
+  font-size:1rem;
+  color:var(--ink-light);
+  margin-top:1.2rem;
+  margin-bottom:0.5rem;
+  font-style:italic;
+}
+
+p, li{
+  line-height:1.65;
+  color:var(--ink);
+}
+p{margin-bottom:0.8rem;}
+
+ol{
+  margin-left:1.5rem;
+  margin-bottom:1rem;
+}
+ol ol{
+  margin-left:1.2rem;
+  margin-top:0.5rem;
+}
+li{
+  margin-bottom:0.5rem;
+  padding-left:0.3rem;
+}
+li::marker{
+  color:var(--burgundy);
+  font-weight:600;
+}
+
+/* Decorative article separator */
+.article-seal{
+  text-align:center;
+  margin:2.5rem 0;
+  color:var(--gold);
+  font-size:1.4rem;
+  letter-spacing:1rem;
+  position:relative;
+  z-index:2;
+}
+.article-seal::before,
+.article-seal::after{
+  content:"";
+  display:inline-block;
+  width:60px;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--gold), transparent);
+  vertical-align:middle;
+  margin:0 1rem;
+}
+
+/* Horizontal rule inside scroll */
+hr{
+  border:none;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--burgundy), transparent);
+  margin:2.5rem 0;
+  position:relative;
+  z-index:2;
+}
+
+/* Emphasis */
+strong{
+  color:var(--burgundy-dark);
+  font-family:var(--font-cinzel);
+  font-weight:600;
+}
+
+/* Small notes */
+small.note{
+  display:block;
+  color:var(--ink-light);
+  margin-top:0.4rem;
+  font-size:0.9em;
+  font-style:italic;
+}
+
+/* Wax seal at end of codex */
+.wax-seal{
+  width:80px;
+  height:80px;
+  background:radial-gradient(circle at 35% 35%, var(--burgundy), var(--burgundy-dark));
+  border-radius:50%;
+  margin:3rem auto 1rem;
+  position:relative;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.3),
+    inset -4px -4px 10px rgba(0,0,0,0.2),
+    inset 4px 4px 10px rgba(255,255,255,0.1);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2;
+}
+.wax-seal::after{
+  content:"⚖";
+  color:var(--gold);
+  font-size:2rem;
+  text-shadow:0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Footer below scroll */
+.scroll-footer{
+  text-align:center;
+  padding:1rem;
+  color:rgba(230,213,172,0.6);
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  letter-spacing:1px;
+  position:relative;
+  z-index:2;
+  margin-bottom:40px;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .scroll{
+    padding:50px 25px 60px;
+    transform:none;
+  }
+  .scroll-header h1{font-size:1.8rem;}
+  .roller-top, .roller-bottom{left:-15px;right:-15px;height:36px;}
+  .roller-top::before, .roller-top::after,
+  .roller-bottom::before, .roller-bottom::after{width:18px;height:48px;top:-6px;}
+  .nav-tab{font-size:0.75rem;padding:8px 14px 10px;}
+  h2{font-size:1.2rem;}
+  .article-seal::before,
+  .article-seal::after{width:30px;}
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>Kingdom of Valoria</h1>
-    <span>Constitution & Law Codex</span>
-  </div>
-  <nav>
-    <a href="#constitution">Constitution</a>
-    <a href="#codex">Law Codex</a>
-  </nav>
-</header>
-
-<main>
+<div class="scroll-desk">
+  <!-- Top roller -->
+  <div class="roller-top"></div>
   
-  <section id="constitution">
-    <h2>Constitution of the Kingdom of Valoria</h2>
+  <!-- The parchment -->
+  <div class="scroll">
+    <div class="scroll-edge-left"></div>
+    <div class="scroll-edge-right"></div>
+    
+    <div class="scroll-header">
+      <h1>Kingdom of Valoria</h1>
+      <span class="subtitle">Constitution & Law Codex</span>
+      <div class="divider">❦ ❦ ❦</div>
+    </div>
 
-    <h3>Preamble</h3>
-    <p>We, the people of Valoria, united under our King and loyal within the Unite Union of Republics (UUR), establish this Constitution to preserve our sovereignty, ensure justice and security, and uphold the Valorian spirit of trade, neutrality, and civic participation. Valoria seeks to be a stable middle power — focused on commerce, alliances, and pragmatic diplomacy while remaining loyal to the UUR when collective defense is required.</p>
+    <nav class="nav-tabs">
+      <a href="#constitution" class="nav-tab">The Constitution</a>
+      <a href="#codex" class="nav-tab">The Codex</a>
+    </nav>
 
-    <h3>Article I — Valoria and the UUR</h3>
-    <ol>
-      <li>Valoria is a proud and semi-autonomous realm within the Unite Union of Republics (UUR).</li>
-      <li>Valoria remains a member of the UUR. Valoria's default posture is to act as a neutral, trade-focused intermediary ("the middle") that cultivates alliances and commerce with multiple partners, provided such relations do not conflict with UUR obligations.</li>
-      <li>In matters of UUR collective defense, Valoria will ordinarily honor its commitments to the UUR; however the internal governance mechanisms (see Article II and Article V) provide for considered decision-making before committing Valorian forces to offensive operations outside its borders.</li>
-      <li>Valoria maintains the right to negotiate bilateral trade and alliance agreements (for example, free trade arrangements with the Astari) so long as they do not violate explicit UUR treaties to which Valoria is party.</li>
-    </ol>
+    <section id="constitution">
+      <h2>Constitution of the Kingdom of Valoria</h2>
 
-    <h3>Article II — Autonomy, Power-sharing, and Governance</h3>
-    <ol>
-      <li>Valoria retains broad autonomy over domestic affairs including law, economy, and local administration, consistent with UUR fundamental principles.</li>
-      <li>Valoria's executive authority is shared among three constitutional offices that together form the Valorian Regional Council (VRC):</li>
-      <ol type="a">
-        <li><strong>The King</strong> — holds the decisive interest equivalent to 50% of the Council influence and acts as Head of State and guardian of Valorian unity.</li>
-        <li><strong>The Lord of Valoria</strong> — a fixed lordship holding 25% influence in the VRC</li>
-        <li><strong>The Senior Lord of Valoria</strong> — a fixed lordship holding 25% influence in the VRC</li>
-      </ol>
-      <li>The VRC votes on major constitutional matters and on whether a citizen referendum (popular vote) should be opened for issues of national importance. A majority of the Council is required for most decisions; certain constitutional questions may require a supermajority (see Article XI).</li>
-      <li>The Valorian Regional Council (VRC) is also the legislative body. To reflect Valoria's current size and practice, the VRC shall be constituted of three (3) appointed/elected members unless otherwise expanded by constitutional amendment. The VRC deliberates and drafts legislation, subject to VRC and Crown approval as defined herein.</li>
-      <li>Citizen political participation: citizens retain the right to petition, propose initiatives, and request referenda. An initiative signed by a threshold proportion of citizens (set by law) triggers VRC consideration and requires the VRC to vote on whether to allow a public referendum. This provides a formal pathway for citizens to influence policy beyond passive observation.</li>
-      <li>Alter Hafen: the city of Alter Hafen enjoys recognized, limited autonomy owing to its multi-national founding. It is governed locally by a fixed Lord (Lord of Alter Hafen) with powers delegated in municipal statute. Alter Hafen operates under Valorian sovereignty but retains local rule over municipal affairs and trade administration.</li>
-    </ol>
-    <h3>Article II.X — Lordships for New Cities</h3>
+      <h3>Preamble</h3>
+      <p>We, the people of Valoria, united under our King and loyal within the Unite Union of Republics (UUR), establish this Constitution to preserve our sovereignty, ensure justice and security, and uphold the Valorian spirit of trade, neutrality, and civic participation. Valoria seeks to be a stable middle power — focused on commerce, alliances, and pragmatic diplomacy while remaining loyal to the UUR when collective defense is required.</p>
+
+      <div class="article-seal">❦</div>
+
+      <h3>Article I — Valoria and the UUR</h3>
       <ol>
-     <li>When a new city is officially recognized by the King, a lordship may be established to oversee local administration, projects, and initiatives.</li>
-     <li>Citizens of the Kingdom of Valoria shall participate in a one-time vote between three current members of the Valorian Regional Council (VRC), to determine which official shall serve as Lord of the city.</li>
-     <li>The elected Lord shall hold office over the city until reassignment, and shall be responsible for managing local administrative matters, reporting to the King as necessary.</li>
-     <li>Lordship does not confer additional VRC influence, alter the fixed VRC shares, or affect the constitutional authority of the elected official at the national level.</li>
-     <li>The VRC and King may enact regulations detailing the procedural, statutory, and administrative aspects of the lordships.</li>
+        <li>Valoria is a proud and semi-autonomous realm within the Unite Union of Republics (UUR).</li>
+        <li>Valoria remains a member of the UUR. Valoria's default posture is to act as a neutral, trade-focused intermediary ("the middle") that cultivates alliances and commerce with multiple partners, provided such relations do not conflict with UUR obligations.</li>
+        <li>In matters of UUR collective defense, Valoria will ordinarily honor its commitments to the UUR; however the internal governance mechanisms (see Article II and Article V) provide for considered decision-making before committing Valorian forces to offensive operations outside its borders.</li>
+        <li>Valoria maintains the right to negotiate bilateral trade and alliance agreements (for example, free trade arrangements with the Astari) so long as they do not violate explicit UUR treaties to which Valoria is party.</li>
       </ol>
-    <h3>Article III — Rights and Duties of Citizens</h3>
-    <ol>
-      <li>All citizens are equal before the law and enjoy fundamental rights to safety, freedom of expression, property, and fair trial.</li>
-      <li>Employment, civic contribution, and participation are encouraged as duties of citizenship; the State shall provide avenues for meaningful, proportionate service.</li>
-      <li>Citizens have the right to bear arms for defense of the realm subject to regulation and training requirements set by law.</li>
-      <li>The government may take exceptional measures in times of war or national emergency in accordance with Article XV (emergency review).</li>
-    </ol>
 
-    <h3>Article IV — Economy, Trade, and Neutrality</h3>
-    <ol>
-      <li>Valoria's policy prioritizes commerce, innovation, and fair trade. The realm seeks to be a regional trading hub and mediator.</li>
-      <li>Valorian and allied enterprises are given preference in domestic procurement where appropriate; however treaty obligations and fair competition rules shall be respected.</li>
-      <li>Valoria formally recognizes the legitimacy of negotiated free trade agreements (such as with the Astari). Trade agreements may be entered into by the VRC with VRC oversight to ensure consistency with UUR commitments.</li>
-      <li>Neutrality policy: Valoria will avoid participation in offensive conflicts where possible, seeking to remain the neutral middle. If UUR collective defense compels participation, the VRC shall guide implementation to preserve Valorian interests and citizen safety.</li>
-    </ol>
+      <div class="article-seal">❦</div>
 
-    <h3>Article V — Security, Defense and the Citizen Army</h3>
-    <ol>
-      <li>The defense of Valoria is a shared responsibility. The Valorian Internal Service (VIS) maintains domestic order and supports civil defense; a trained citizen militia/army exists for territorial defense.</li>
-      <li>Mobilization for external campaigns shall follow VRC and VRC procedures; where possible, Valoria emphasizes defensive readiness and avoiding entanglement in external power struggles.</li>
-      <li>The VIS and Valorian forces coordinate with the UUR for joint defense obligations, subject to the VRC's guidance and citizen safeguards.</li>
-    </ol>
+      <h3>Article II — Autonomy, Power-sharing, and Governance</h3>
+      <ol>
+        <li>Valoria retains broad autonomy over domestic affairs including law, economy, and local administration, consistent with UUR fundamental principles.</li>
+        <li>Valoria's executive authority is shared among three constitutional offices that together form the Valorian Regional Council (VRC):</li>
+        <ol type="a">
+          <li><strong>The King</strong> — holds the decisive interest equivalent to 50% of the Council influence and acts as Head of State and guardian of Valorian unity.</li>
+          <li><strong>The Lord of Valoria</strong> — a fixed lordship holding 25% influence in the VRC</li>
+          <li><strong>The Senior Lord of Valoria</strong> — a fixed lordship holding 25% influence in the VRC</li>
+        </ol>
+        <li>The VRC votes on major constitutional matters and on whether a citizen referendum (popular vote) should be opened for issues of national importance. A majority of the Council is required for most decisions; certain constitutional questions may require a supermajority (see Article XI).</li>
+        <li>The Valorian Regional Council (VRC) is also the legislative body. To reflect Valoria's current size and practice, the VRC shall be constituted of three (3) appointed/elected members unless otherwise expanded by constitutional amendment. The VRC deliberates and drafts legislation, subject to VRC and Crown approval as defined herein.</li>
+        <li>Citizen political participation: citizens retain the right to petition, propose initiatives, and request referenda. An initiative signed by a threshold proportion of citizens (set by law) triggers VRC consideration and requires the VRC to vote on whether to allow a public referendum. This provides a formal pathway for citizens to influence policy beyond passive observation.</li>
+        <li>Alter Hafen: the city of Alter Hafen enjoys recognized, limited autonomy owing to its multi-national founding. It is governed locally by a fixed Lord (Lord of Alter Hafen) with powers delegated in municipal statute. Alter Hafen operates under Valorian sovereignty but retains local rule over municipal affairs and trade administration.</li>
+      </ol>
 
-    <h3>Article VI — Culture, Identity and Local Autonomy</h3>
-    <ol>
-      <li>Valorian culture, language, and heritage shall be preserved and promoted.</li>
-      <li>Other cultures are respected within Valoria and in Alter Hafen's multicultural administration, provided they do not seek to undermine Valorian constitutional order.</li>
-      <li>Acts intended to provoke unrest through cultural mockery are discouraged and may be addressed within the bounds of law and proportionality.</li>
-    </ol>
+      <div class="article-seal">❦</div>
 
-    <h3>Article VII — Treason, Loyalty and Public Office</h3>
-    <ol>
-      <li>Officials and citizens sworn into office shall pledge loyalty to Valoria and respect Valorian obligations to the UUR.</li>
-      <li>Treason, rebellion, or deliberate acts of subversion against Valoria or the UUR are prosecutable under Valorian law.</li>
-      <li>The VRC has the constitutional authority to review alleged breaches by officials; adjudication remains the remit of the independent courts.</li>
-    </ol>
+      <h3>Article II.X — Lordships for New Cities</h3>
+      <ol>
+        <li>When a new city is officially recognized by the King, a lordship may be established to oversee local administration, projects, and initiatives.</li>
+        <li>Citizens of the Kingdom of Valoria shall participate in a one-time vote between three current members of the Valorian Regional Council (VRC), to determine which official shall serve as Lord of the city.</li>
+        <li>The elected Lord shall hold office over the city until reassignment, and shall be responsible for managing local administrative matters, reporting to the King as necessary.</li>
+        <li>Lordship does not confer additional VRC influence, alter the fixed VRC shares, or affect the constitutional authority of the elected official at the national level.</li>
+        <li>The VRC and King may enact regulations detailing the procedural, statutory, and administrative aspects of the lordships.</li>
+      </ol>
 
-    <h3>Article VIII — The Rule of Law & Judicial Independence</h3>
-    <ol>
-      <li>All citizens and officials are bound by this Constitution.</li>
-      <li>Laws may be enacted by the VRC and require formal assent as defined in statute and VRC procedures.</li>
-      <li>The judiciary shall remain independent and ensure due process, proportionality, and transparency.</li>
-    </ol>
+      <div class="article-seal">❦</div>
 
-    <h3>Article IX — Amendments and Citizen Referenda</h3>
-    <ol>
-      <li>This Constitution may be amended by a two-thirds majority of the VRC and approval by the King, or by constitutional process initiated via citizen referendum when permitted by the VRC.</li>
-      <li>For major structural changes (including alteration of VRC composition or core sovereignty clauses), a supermajority in the VRC and a citizen referendum are required.</li>
-      <li>Procedures for citizen initiatives, thresholds, and referendum administration shall be detailed in implementing statute.</li>
-    </ol>
+      <h3>Article III — Rights and Duties of Citizens</h3>
+      <ol>
+        <li>All citizens are equal before the law and enjoy fundamental rights to safety, freedom of expression, property, and fair trial.</li>
+        <li>Employment, civic contribution, and participation are encouraged as duties of citizenship; the State shall provide avenues for meaningful, proportionate service.</li>
+        <li>Citizens have the right to bear arms for defense of the realm subject to regulation and training requirements set by law.</li>
+        <li>The government may take exceptional measures in times of war or national emergency in accordance with Article XV (emergency review).</li>
+      </ol>
 
-    <h3>Article X — Implementation</h3>
-    <ol>
-      <li>This Constitution takes precedence over ordinary statute. Transitional provisions shall be enacted to reflect the VRC power distribution and the three-member VRC composition described herein.</li>
-    </ol>
+      <div class="article-seal">❦</div>
 
-    <h3>Article XI — The Territory of Determa and Colonial Administration</h3>
-    <ol>
-     <h4>Section 1 — Constitutional Status and Sovereignty</h4>
-     <li>Determa is officially recognized as a colonial territory under the sole sovereignty and protection of the Kingdom of Valoria, following formal approval and authorization from the United Union of Republics (UUR). The strategic military base left by the UUR in Determa shall be fully managed and controlled by the Valorian Crown to ensure regional security and defense.</li>
-     <h4>Section 2 — Local Administration and Governance</h4>
-     <li>The King of Valoria will manage the daily affairs, economy, and infrastructure of Determa himself, with support from the VRC. Valoria commits to establishing a stable, peaceful environment in Determa to prevent future revolutions, political unrest, or radical systemic changes. Valorian laws shall apply.</li>
-     <h4>Section 3 — Political Participation and Voting Rights</h4>
-     <li>The Valorian citizens of Determa shall have the right to vote in regular Valorian polls. As of May 28, 1926, Valoria will start the process of granting the people of Determa a "Valorianischer Pass". Only people with this citizenship will be allowed to vote in Valorian and Determian matters or actively engage in politics. People owning property in Determa shall have the right to vote in local polls specifically made for Determa. To ensure fair representation, the "Determianischer Rat" is established. This assembly can draft local policies and suggestions, subject to final approval by the Valorian Regional Council (VRC) and the King.</li>
-     <h4>Section 4 — Integration and Commerce</h4>
-     <li>Trade between Valoria and Determa shall be protected and promoted. Valorian enterprises shall have preferential trading rights within the territory to rebuild the local economy. Companies shall be encouraged to expand into Determa. The legal system of Determa shall be gradually aligned with the fundamental rights and rule of law of the Valorian Kingdom, ensuring safety, property rights, and fair trials for all inhabitants. </li>
-    </ol>
-  </section>
+      <h3>Article IV — Economy, Trade, and Neutrality</h3>
+      <ol>
+        <li>Valoria's policy prioritizes commerce, innovation, and fair trade. The realm seeks to be a regional trading hub and mediator.</li>
+        <li>Valorian and allied enterprises are given preference in domestic procurement where appropriate; however treaty obligations and fair competition rules shall be respected.</li>
+        <li>Valoria formally recognizes the legitimacy of negotiated free trade agreements (such as with the Astari). Trade agreements may be entered into by the VRC with VRC oversight to ensure consistency with UUR commitments.</li>
+        <li>Neutrality policy: Valoria will avoid participation in offensive conflicts where possible, seeking to remain the neutral middle. If UUR collective defense compels participation, the VRC shall guide implementation to preserve Valorian interests and citizen safety.</li>
+      </ol>
 
-  <hr>
+      <div class="article-seal">❦</div>
 
-  <section id="codex">
-    <h2>⚖️ The Valorian Law Codex (VLC)</h2>
-    <p><em>Established under the Constitution of the Kingdom of Valoria, ratified by the Valorian Regional Council (VRC) and confirmed by His Majesty the King and the Valorian Regional Council (VRC).</em></p>
+      <h3>Article V — Security, Defense and the Citizen Army</h3>
+      <ol>
+        <li>The defense of Valoria is a shared responsibility. The Valorian Internal Service (VIS) maintains domestic order and supports civil defense; a trained citizen militia/army exists for territorial defense.</li>
+        <li>Mobilization for external campaigns shall follow VRC and VRC procedures; where possible, Valoria emphasizes defensive readiness and avoiding entanglement in external power struggles.</li>
+        <li>The VIS and Valorian forces coordinate with the UUR for joint defense obligations, subject to the VRC's guidance and citizen safeguards.</li>
+      </ol>
 
-    <h3>Title I — General Provisions</h3>
-    <h4>Article 1 — Purpose</h4>
-    <p>The Valorian Law Codex ensures order, justice, and the protection of Valoria’s sovereignty, culture, economy, and citizens.</p>
+      <div class="article-seal">❦</div>
 
-    <h4>Article 2 — Supremacy of the Constitution</h4>
-    <p>All laws derive their authority from the Valorian Constitution. In conflict, constitutional principles prevail.</p>
+      <h3>Article VI — Culture, Identity and Local Autonomy</h3>
+      <ol>
+        <li>Valorian culture, language, and heritage shall be preserved and promoted.</li>
+        <li>Other cultures are respected within Valoria and in Alter Hafen's multicultural administration, provided they do not seek to undermine Valorian constitutional order.</li>
+        <li>Acts intended to provoke unrest through cultural mockery are discouraged and may be addressed within the bounds of law and proportionality.</li>
+      </ol>
 
-    <h4>Article 3 — Equality Before the Law</h4>
-    <p>All Valorians are equal before the law regardless of heritage, belief, or station. Nobility and office impose duties, not immunity.</p>
+      <div class="article-seal">❦</div>
 
-    <h4>Article 4 — Application of Justice</h4>
-    <p>Justice shall be fair, transparent, and proportional. Punishment aims for rehabilitation, restitution, and deterrence rather than humiliation.</p>
+      <h3>Article VII — Treason, Loyalty and Public Office</h3>
+      <ol>
+        <li>Officials and citizens sworn into office shall pledge loyalty to Valoria and respect Valorian obligations to the UUR.</li>
+        <li>Treason, rebellion, or deliberate acts of subversion against Valoria or the UUR are prosecutable under Valorian law.</li>
+        <li>The VRC has the constitutional authority to review alleged breaches by officials; adjudication remains the remit of the independent courts.</li>
+      </ol>
 
-    <h3>Title II — Crimes Against the Realm</h3>
-    <h4>Chapter 1 — Treason and Rebellion</h4>
-    <p><strong>Article 5.1 — High Treason</strong><br>
-    Acts intending to overthrow, harm, or betray Valoria or the UUR are treason.<br>
-    → Punishment: 10–30 days imprisonment, exile, or loss of citizenship in grave cases.</p>
+      <div class="article-seal">❦</div>
 
-    <p><strong>Article 5.2 — Sedition and Civil Disorder</strong><br>
-    Organizing or leading demonstrations intended to violently oppose lawful authority or promote widespread disorder constitutes sedition.<br>
-    → Punishment: 3–15 days imprisonment or fine proportional to offense.</p>
+      <h3>Article VIII — The Rule of Law & Judicial Independence</h3>
+      <ol>
+        <li>All citizens and officials are bound by this Constitution.</li>
+        <li>Laws may be enacted by the VRC and require formal assent as defined in statute and VRC procedures.</li>
+        <li>The judiciary shall remain independent and ensure due process, proportionality, and transparency.</li>
+      </ol>
 
-    <p><strong>Article 5.3 — Foreign Collaboration</strong><br>
-    Deliberate cooperation with hostile powers to Valoria's detriment is a serious offense.<br>
-    → Punishment: 15–30 days imprisonment and asset measures appropriate to the breach.</p>
+      <div class="article-seal">❦</div>
 
-    <h4>Chapter 2 — Symbolic Acts and Loyalty</h4>
-    <p><strong>Article 6.1 — Insulting the Realm</strong><br>
-    Publicly mocking Valoria’s institutions or symbols in a way that intentionally incites disorder may be sanctioned.<br>
-    → Punishment: fines or civic measures proportional to harm inflicted.</p>
+      <h3>Article IX — Amendments and Citizen Referenda</h3>
+      <ol>
+        <li>This Constitution may be amended by a two-thirds majority of the VRC and approval by the King, or by constitutional process initiated via citizen referendum when permitted by the VRC.</li>
+        <li>For major structural changes (including alteration of VRC composition or core sovereignty clauses), a supermajority in the VRC and a citizen referendum are required.</li>
+        <li>Procedures for citizen initiatives, thresholds, and referendum administration shall be detailed in implementing statute.</li>
+      </ol>
 
-    <p><strong>Article 6.2 — Royal Disrespect</strong><br>
-    Unlawful slander or targeted harassment of the Royal Family may be punished by administrative or civic remedies.<br>
-    → Punishment: fines, mandatory community service, or restorative measures.</p>
+      <div class="article-seal">❦</div>
 
-    <p><strong>Article 6.3 — Anti-Traditionalist Acts</strong><br>
-    Deliberate attempts to provoke unrest by promoting banned pre-reform symbols or identity-subversion may be addressed under this Codex.<br>
-    → Punishment: fines or brief civic corrective duties proportionate to the offense.</p>
+      <h3>Article X — Implementation</h3>
+      <ol>
+        <li>This Constitution takes precedence over ordinary statute. Transitional provisions shall be enacted to reflect the VRC power distribution and the three-member VRC composition described herein.</li>
+      </ol>
 
-    <h3>Title III — Civil and Social Order</h3>
-    <h4>Chapter 1 — Conduct and Respect</h4>
-    <p><strong>Article 7.1 — Disrespect Toward Authority</strong><br>
-    Wilful refusal to comply with lawful civic orders or targeted harassment of officials is an offense.<br>
-    → Punishment: fines or civic service.</p>
+      <div class="article-seal">❦</div>
 
-    <p><strong>Article 7.2 — Threats and Harassment</strong><br>
-    Threatening or coercive behavior is prohibited.<br>
-    → Punishment: fines or short-term confinement as appropriate.</p>
+      <h3>Article XI — The Territory of Determa and Colonial Administration</h3>
+      <ol>
+        <h4>Section 1 — Constitutional Status and Sovereignty</h4>
+        <li>Determa is officially recognized as a colonial territory under the sole sovereignty and protection of the Kingdom of Valoria, following formal approval and authorization from the United Union of Republics (UUR). The strategic military base left by the UUR in Determa shall be fully managed and controlled by the Valorian Crown to ensure regional security and defense.</li>
+        <h4>Section 2 — Local Administration and Governance</h4>
+        <li>The King of Valoria will manage the daily affairs, economy, and infrastructure of Determa himself, with support from the VRC. Valoria commits to establishing a stable, peaceful environment in Determa to prevent future revolutions, political unrest, or radical systemic changes. Valorian laws shall apply.</li>
+        <h4>Section 3 — Political Participation and Voting Rights</h4>
+        <li>The Valorian citizens of Determa shall have the right to vote in regular Valorian polls. As of May 28, 1926, Valoria will start the process of granting the people of Determa a "Valorianischer Pass". Only people with this citizenship will be allowed to vote in Valorian and Determian matters or actively engage in politics. People owning property in Determa shall have the right to vote in local polls specifically made for Determa. To ensure fair representation, the "Determianischer Rat" is established. This assembly can draft local policies and suggestions, subject to final approval by the Valorian Regional Council (VRC) and the King.</li>
+        <h4>Section 4 — Integration and Commerce</h4>
+        <li>Trade between Valoria and Determa shall be protected and promoted. Valorian enterprises shall have preferential trading rights within the territory to rebuild the local economy. Companies shall be encouraged to expand into Determa. The legal system of Determa shall be gradually aligned with the fundamental rights and rule of law of the Valorian Kingdom, ensuring safety, property rights, and fair trials for all inhabitants. </li>
+      </ol>
+    </section>
 
-    <p><strong>Article 7.3 — Destruction of Property</strong><br>
-    Intentional damage to public or private property requires restitution and civic remedy.<br>
-    → Punishment: restitution + fines or community work.</p>
+    <hr>
 
-    <h4>Chapter 2 — Theft, Fraud, and Deception</h4>
-    <p><strong>Article 8.1 — Theft</strong><br>
-    Taking property without consent is illegal.<br>
-    → Punishment: return of goods and restitution, or proportionate confinement.</p>
+    <section id="codex">
+      <h2>The Valorian Law Codex (VLC)</h2>
+      <p><em>Established under the Constitution of the Kingdom of Valoria, ratified by the Valorian Regional Council (VRC) and confirmed by His Majesty the King and the Valorian Regional Council (VRC).</em></p>
 
-    <p><strong>Article 8.2 — Fraud</strong><br>
-    Deceit for material gain is prohibited.<br>
-    → Punishment: restitution + fines or confinement.</p>
+      <h3>Title I — General Provisions</h3>
+      <h4>Article 1 — Purpose</h4>
+      <p>The Valorian Law Codex ensures order, justice, and the protection of Valoria's sovereignty, culture, economy, and citizens.</p>
 
-    <p><strong>Article 8.3 — Exploitation of Loopholes</strong><br>
-    Exploiting statutory gaps to gain unfair advantage may be remedied by judicial penalty and legislative amendment where needed.</p>
+      <h4>Article 2 — Supremacy of the Constitution</h4>
+      <p>All laws derive their authority from the Valorian Constitution. In conflict, constitutional principles prevail.</p>
 
-    <h4>Chapter 3 — Public Morality and Health</h4>
-    <p><strong>Article 9.1 — Drug Prohibition</strong><br>
-    Non-authorized production, trade, or use of illegal narcotics is banned.<br>
-    → Punishment: custodial measures, confiscation, and rehabilitation where suitable. Licensed scientific/medical exceptions apply.</p>
+      <h4>Article 3 — Equality Before the Law</h4>
+      <p>All Valorians are equal before the law regardless of heritage, belief, or station. Nobility and office impose duties, not immunity.</p>
 
-    <p><strong>Article 9.2 — Disorderly Conduct</strong><br>
-    Public intoxication, violence, or indecent acts disturbing public order are punishable.<br>
-    → Punishment: fines or civic service.</p>
+      <h4>Article 4 — Application of Justice</h4>
+      <p>Justice shall be fair, transparent, and proportional. Punishment aims for rehabilitation, restitution, and deterrence rather than humiliation.</p>
 
-    <h3>Title IV — Economic and Administrative Laws</h3>
-    <p><strong>Article 10 — Economic Loyalty</strong><br>
-    Valorian and allied enterprises are given preference in procurement when appropriate. Sabotage of domestic production or economic infrastructure is seriously penalized.</p>
+      <div class="article-seal">❦</div>
 
-    <p><strong>Article 11 — Corruption and Abuse of Office</strong><br>
-    Public officials engaging in bribery or abuse face dismissal, fines, and criminal sanction where warranted.</p>
+      <h3>Title II — Crimes Against the Realm</h3>
+      <h4>Chapter 1 — Treason and Rebellion</h4>
+      <p><strong>Article 5.1 — High Treason</strong><br>
+      Acts intending to overthrow, harm, or betray Valoria or the UUR are treason.<br>
+      → Punishment: 10–30 days imprisonment, exile, or loss of citizenship in grave cases.</p>
 
-    <p><strong>Article 12 — Tax and Contribution</strong><br>
-    Valoria imposes minimal regular taxation. In exceptional circumstances, mandatory civic contributions or service hours may be enacted under VRC law and VRC oversight.</p>
+      <p><strong>Article 5.2 — Sedition and Civil Disorder</strong><br>
+      Organizing or leading demonstrations intended to violently oppose lawful authority or promote widespread disorder constitutes sedition.<br>
+      → Punishment: 3–15 days imprisonment or fine proportional to offense.</p>
 
-    <h3>Title V — Rights and Safeguards</h3>
-    <p><strong>Article 13 — Right to Fair Trial</strong><br>
-    Every accused has the right to defense, representation, and an appeal process.</p>
+      <p><strong>Article 5.3 — Foreign Collaboration</strong><br>
+      Deliberate cooperation with hostile powers to Valoria's detriment is a serious offense.<br>
+      → Punishment: 15–30 days imprisonment and asset measures appropriate to the breach.</p>
 
-    <p><strong>Article 14 — Privacy and Dignity</strong><br>
-    Private correspondence, homes, and personal property are protected from unlawful intrusion.</p>
+      <h4>Chapter 2 — Symbolic Acts and Loyalty</h4>
+      <p><strong>Article 6.1 — Insulting the Realm</strong><br>
+      Publicly mocking Valoria's institutions or symbols in a way that intentionally incites disorder may be sanctioned.<br>
+      → Punishment: fines or civic measures proportional to harm inflicted.</p>
 
-    <p><strong>Article 15 — Emergency Suspension of Rights</strong><br>
-    In times of war or national emergency, certain rights may be temporarily limited by lawful decree, subject to prompt VRC review and judicial oversight.</p>
+      <p><strong>Article 6.2 — Royal Disrespect</strong><br>
+      Unlawful slander or targeted harassment of the Royal Family may be punished by administrative or civic remedies.<br>
+      → Punishment: fines, mandatory community service, or restorative measures.</p>
 
-    <h3>Title VI — Implementation and Interpretation</h3>
-    <p><strong>Article 16 — Judiciary Authority</strong><br>
-    The Royal Court of Valoria interprets this Codex. Its rulings set binding precedent.</p>
+      <p><strong>Article 6.3 — Anti-Traditionalist Acts</strong><br>
+      Deliberate attempts to provoke unrest by promoting banned pre-reform symbols or identity-subversion may be addressed under this Codex.<br>
+      → Punishment: fines or brief civic corrective duties proportionate to the offense.</p>
 
-    <p><strong>Article 17 — Enforcement</strong><br>
-    The Valorian Internal Service (VIS) enforces this Codex under oversight of the Ministry of Justice and Security and subject to judicial review.</p>
+      <div class="article-seal">❦</div>
 
-    <p><strong>Article 18 — Amendments to the Codex</strong><br>
-    Laws may be modified by the VRC with VRC oversight and the assent required by the Constitution.</p>
+      <h3>Title III — Civil and Social Order</h3>
+      <h4>Chapter 1 — Conduct and Respect</h4>
+      <p><strong>Article 7.1 — Disrespect Toward Authority</strong><br>
+      Wilful refusal to comply with lawful civic orders or targeted harassment of officials is an offense.<br>
+      → Punishment: fines or civic service.</p>
 
-    <h3>Title VII — Special Provisions</h3>
-    <p><strong>Article 19 — Alter Hafen Autonomy</strong><br>
-    Alter Hafen retains municipal autonomy in local governance, trade administration, and cultural affairs consistent with Valorian law. Disputes between Alter Hafen officials and Valorian authorities are resolved through designated judicial or arbitration mechanisms.</p>
+      <p><strong>Article 7.2 — Threats and Harassment</strong><br>
+      Threatening or coercive behavior is prohibited.<br>
+      → Punishment: fines or short-term confinement as appropriate.</p>
 
-    <p><strong>Article 20 — Trade and External Agreements</strong><br>
-    Valoria may enter trade and alliance agreements (including free trade with the Astari). Such agreements shall be structured to preserve Valoria's neutrality posture where possible and to respect UUR obligations.</p>
+      <p><strong>Article 7.3 — Destruction of Property</strong><br>
+      Intentional damage to public or private property requires restitution and civic remedy.<br>
+      → Punishment: restitution + fines or community work.</p>
 
-    <h3>Closing Clause</h3>
-    <p>Let this Codex serve as a guardian of order, prosperity, and fair governance. Its aim is to preserve Valoria's role as a stable, trade-focused middle power — loyal to its treaties, protective of its people, and responsive to citizen influence.</p>
-  </section>
-</main>
+      <h4>Chapter 2 — Theft, Fraud, and Deception</h4>
+      <p><strong>Article 8.1 — Theft</strong><br>
+      Taking property without consent is illegal.<br>
+      → Punishment: return of goods and restitution, or proportionate confinement.</p>
 
-<footer>
-  © 2025 Kingdom of Valoria — All rights reserved.
-</footer>
+      <p><strong>Article 8.2 — Fraud</strong><br>
+      Deceit for material gain is prohibited.<br>
+      → Punishment: restitution + fines or confinement.</p>
+
+      <p><strong>Article 8.3 — Exploitation of Loopholes</strong><br>
+      Exploiting statutory gaps to gain unfair advantage may be remedied by judicial penalty and legislative amendment where needed.</p>
+
+      <h4>Chapter 3 — Public Morality and Health</h4>
+      <p><strong>Article 9.1 — Drug Prohibition</strong><br>
+      Non-authorized production, trade, or use of illegal narcotics is banned.<br>
+      → Punishment: custodial measures, confiscation, and rehabilitation where suitable. Licensed scientific/medical exceptions apply.</p>
+
+      <p><strong>Article 9.2 — Disorderly Conduct</strong><br>
+      Public intoxication, violence, or indecent acts disturbing public order are punishable.<br>
+      → Punishment: fines or civic service.</p>
+
+      <div class="article-seal">❦</div>
+
+      <h3>Title IV — Economic and Administrative Laws</h3>
+      <p><strong>Article 10 — Economic Loyalty</strong><br>
+      Valorian and allied enterprises are given preference in procurement when appropriate. Sabotage of domestic production or economic infrastructure is seriously penalized.</p>
+
+      <p><strong>Article 11 — Corruption and Abuse of Office</strong><br>
+      Public officials engaging in bribery or abuse face dismissal, fines, and criminal sanction where warranted.</p>
+
+      <p><strong>Article 12 — Tax and Contribution</strong><br>
+      Valoria imposes minimal regular taxation. In exceptional circumstances, mandatory civic contributions or service hours may be enacted under VRC law and VRC oversight.</p>
+
+      <div class="article-seal">❦</div>
+
+      <h3>Title V — Rights and Safeguards</h3>
+      <p><strong>Article 13 — Right to Fair Trial</strong><br>
+      Every accused has the right to defense, representation, and an appeal process.</p>
+
+      <p><strong>Article 14 — Privacy and Dignity</strong><br>
+      Private correspondence, homes, and personal property are protected from unlawful intrusion.</p>
+
+      <p><strong>Article 15 — Emergency Suspension of Rights</strong><br>
+      In times of war or national emergency, certain rights may be temporarily limited by lawful decree, subject to prompt VRC review and judicial oversight.</p>
+
+      <div class="article-seal">❦</div>
+
+      <h3>Title VI — Implementation and Interpretation</h3>
+      <p><strong>Article 16 — Judiciary Authority</strong><br>
+      The Royal Court of Valoria interprets this Codex. Its rulings set binding precedent.</p>
+
+      <p><strong>Article 17 — Enforcement</strong><br>
+      The Valorian Internal Service (VIS) enforces this Codex under oversight of the Ministry of Justice and Security and subject to judicial review.</p>
+
+      <p><strong>Article 18 — Amendments to the Codex</strong><br>
+      Laws may be modified by the VRC with VRC oversight and the assent required by the Constitution.</p>
+
+      <div class="article-seal">❦</div>
+
+      <h3>Title VII — Special Provisions</h3>
+      <p><strong>Article 19 — Alter Hafen Autonomy</strong><br>
+      Alter Hafen retains municipal autonomy in local governance, trade administration, and cultural affairs consistent with Valorian law. Disputes between Alter Hafen officials and Valorian authorities are resolved through designated judicial or arbitration mechanisms.</p>
+
+      <p><strong>Article 20 — Trade and External Agreements</strong><br>
+      Valoria may enter trade and alliance agreements (including free trade with the Astari). Such agreements shall be structured to preserve Valoria's neutrality posture where possible and to respect UUR obligations.</p>
+
+      <h3>Closing Clause</h3>
+      <p>Let this Codex serve as a guardian of order, prosperity, and fair governance. Its aim is to preserve Valoria's role as a stable, trade-focused middle power — loyal to its treaties, protective of its people, and responsive to citizen influence.</p>
+
+      <!-- Wax seal at the end -->
+      <div class="wax-seal"></div>
+    </section>
+  </div>
+
+  <!-- Bottom roller -->
+  <div class="roller-bottom"></div>
+</div>
+
+<div class="scroll-footer">© 2025 Kingdom of Valoria — All rights reserved. | Sealed by the Royal Scribe</div>
+
 </body>
 </html>
