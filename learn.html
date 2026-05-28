@@ -4,174 +4,713 @@
 <meta charset="UTF-8">
 <title>Valorian Citizenship Course</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative&display=swap');
-
 :root{
+  --parchment:#e6d5ac;
+  --parchment-dark:#d4c194;
+  --parchment-worn:#c9b896;
+  --ink:#1a0f0a;
+  --ink-light:#3d2b1f;
+  --burgundy:#6b0f1a;
+  --burgundy-dark:#4a0a12;
+  --gold:#b8860b;
+  --gold-light:#daa520;
+  --wood:#3e2723;
+  --wood-dark:#281815;
+  --wood-light:#5d4037;
+  --leather:#1a0f0a;
+  --shadow:rgba(0,0,0,0.5);
   
-  --bg:#0c0b08;                 
-  --card:#14110e;               
-  --border:#4a3829;             
-  --accent:#c03;                
-  --text:#e8dfc8;               
-  --sub:#8a7d69;               
-
- 
-  --gap:1.2rem;
-  font-family:"Cinzel", "Palatino Linotype", "Book Antiqua", Palatino, serif;
-  font-weight:400;
-  letter-spacing:.4px;
+  --font-gothic:'UnifrakturMaguntia', cursive;
+  --font-cinzel:'Cinzel', serif;
+  --font-body:'EB Garamond', serif;
 }
 
+*{box-sizing:border-box;margin:0;padding:0}
 
+html{background:var(--wood-dark)}
+
+/* Scribe's desk background */
 body{
-  margin:0;
-  background:var(--bg);
-  background-image:
-    radial-gradient(circle at 25% 25%, #1a1612 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, #1a1612 1px, transparent 1px);
-  background-size:4px 4px;
-  color:var(--text);
+  font-family:var(--font-body);
+  color:var(--ink);
   min-height:100vh;
   display:flex;
   flex-direction:column;
+  align-items:center;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(0,0,0,0.03) 4px, rgba(0,0,0,0.03) 8px),
+    repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(0,0,0,0.03) 4px, rgba(0,0,0,0.03) 8px),
+    linear-gradient(160deg, #2a1f1a 0%, #1a120e 60%, #0f0a08 100%);
+  position:relative;
+  padding:40px 20px;
+  line-height:1.65;
 }
-a{color:var(--accent);text-decoration:none}
 
-
-header,footer{
-  background:var(--card);
-  border-bottom:2px solid var(--accent);
-  box-shadow:0 2px 6px #0006;
+/* Desk vignette */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(ellipse at 50% 40%, transparent 30%, rgba(0,0,0,0.5) 100%);
+  pointer-events:none;
+  z-index:0;
 }
-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem}
-header h1{margin:0;font-size:1.8rem;font-family:"Cinzel Decorative",serif;letter-spacing:2px;text-shadow:1px 1px 2px #000}
-header span{font-weight:300;font-size:.9rem;color:var(--sub)}
 
-
-main{flex:1;padding:2rem;max-width:900px;margin:auto;width:100%}
-.tile{
-  background:linear-gradient(145deg, var(--card) 0%, #1a1612 100%);
-  border:1px solid var(--border);
-  border-radius:0;              
-  padding:1.5rem 1rem;
-  text-align:center;
-  transition:transform .15s,box-shadow .15s;
-  cursor:pointer;
+/* Decorative desk items */
+.desk-items{
+  position:fixed;
+  pointer-events:none;
+  z-index:1;
+  opacity:0.4;
+}
+.candle{
+  top:30px;
+  left:30px;
+  width:24px;
+  height:80px;
+  background:linear-gradient(to right, #f4e4bc, #e8d5a8, #c9b896);
+  border-radius:12px 12px 4px 4px;
+  box-shadow:0 0 30px rgba(244,228,188,0.3), 0 4px 12px rgba(0,0,0,0.4);
   position:relative;
 }
-.tile:hover{transform:translateY(-3px);box-shadow:0 6px 20px #000c}
-.tile h3{margin:.4rem 0 .2rem;font-size:1.1rem;font-weight:600}
-.tile p{font-size:.85rem;color:var(--sub);margin:0}
-footer{
+.candle::before{
+  content:"";
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:10px;
+  height:14px;
+  background:radial-gradient(ellipse at 30% 20%, #fff, #ffcc66, #ff9900);
+  border-radius:50% 50% 40% 40%;
+  box-shadow:0 0 20px #ffcc66, 0 0 40px #ff9900;
+  animation:flicker 3s ease-in-out infinite;
+}
+@keyframes flicker{
+  0%,100%{transform:translateX(-50%) scale(1);opacity:1}
+  50%{transform:translateX(-50%) scale(1.1);opacity:0.9}
+}
+.inkpot{
+  bottom:40px;
+  right:40px;
+  width:50px;
+  height:40px;
+  background:radial-gradient(circle at 40% 40%, #1a1a1a, #000);
+  border-radius:50% 50% 45% 45%;
+  border:3px solid var(--gold);
+  box-shadow:0 4px 12px rgba(0,0,0,0.5);
+}
+.inkpot::after{
+  content:"";
+  position:absolute;
+  top:-25px;
+  left:50%;
+  transform:translateX(-50%) rotate(15deg);
+  width:4px;
+  height:60px;
+  background:linear-gradient(to right, #f4e4bc, #c9b896);
+  border-radius:2px;
+  box-shadow:1px 1px 3px rgba(0,0,0,0.3);
+}
+
+/* The Book Container */
+.book-desk{
+  position:relative;
+  z-index:2;
+  max-width:1000px;
+  width:100%;
+  perspective:1200px;
+}
+
+.book{
+  position:relative;
+  background:var(--leather);
+  border-radius:8px;
+  padding:18px;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  /* Gold tooling border */
+  border:3px solid var(--gold);
+}
+
+/* Book spine shadow in center */
+.book-spine{
+  position:absolute;
+  left:50%;
+  top:18px;
+  bottom:18px;
+  width:40px;
+  transform:translateX(-50%);
+  background:linear-gradient(to right, 
+    transparent 0%, 
+    rgba(0,0,0,0.3) 20%, 
+    rgba(0,0,0,0.5) 50%, 
+    rgba(0,0,0,0.3) 80%, 
+    transparent 100%);
+  pointer-events:none;
+  z-index:3;
+}
+
+/* Pages container */
+.pages{
+  display:flex;
+  gap:0;
+  background:var(--leather);
+  position:relative;
+  min-height:700px;
+}
+
+/* Each page */
+.page{
+  flex:1;
+  background:linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  padding:40px 35px;
+  position:relative;
+  overflow-y:auto;
+  max-height:80vh;
+}
+.page-left{
+  border-radius:4px 0 0 4px;
+  border-right:1px solid rgba(139,69,19,0.2);
+  /* Page curl shadow on right edge */
+  box-shadow:inset -8px 0 20px -10px rgba(0,0,0,0.15);
+}
+.page-right{
+  border-radius:0 4px 4px 0;
+  box-shadow:inset 8px 0 20px -10px rgba(0,0,0,0.15);
+}
+
+/* Parchment texture on pages */
+.page::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 20% 20%, rgba(139,69,19,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(160,82,45,0.05) 0%, transparent 40%);
+  pointer-events:none;
+  mix-blend-mode:multiply;
+  opacity:0.8;
+}
+
+/* Red ruling lines (like medieval manuscripts) */
+.ruling{
+  position:absolute;
+  left:30px;
+  right:30px;
+  top:60px;
+  bottom:60px;
+  border:1px solid rgba(139,69,19,0.15);
+  pointer-events:none;
+  z-index:1;
+}
+.ruling::before{
+  content:"";
+  position:absolute;
+  left:20px;
+  top:0;
+  bottom:0;
+  width:1px;
+  background:rgba(139,69,19,0.1);
+}
+
+/* Page content wrapper */
+.page-content{
+  position:relative;
+  z-index:2;
+}
+
+/* Book header on left page */
+.book-header{
   text-align:center;
-  padding:1.2rem;
-  font-size:.8rem;
-  color:var(--sub);
-  border-bottom:none;
-  border-top:2px solid var(--accent);
+  margin-bottom:30px;
+  padding-bottom:20px;
+  border-bottom:2px solid var(--burgundy);
+}
+.book-header h1{
+  font-family:var(--font-gothic);
+  font-size:2.2rem;
+  color:var(--burgundy-dark);
+  line-height:1.2;
+}
+.book-header .subtitle{
+  font-family:var(--font-cinzel);
+  font-size:0.8rem;
+  color:var(--ink-light);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  display:block;
+  margin-top:6px;
 }
 
-
-.chapter-content{display:none;animation:fade .4s}
-.chapter-content.active{display:block}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-#quiz-wrapper{display:none}
-#quiz-wrapper.active{display:block}
-#scoreBoard{margin-top:1rem;font-size:1.2rem}
-.correct{color:#3c3}
-.wrong{color:var(--accent)}
-.progress-bar{height:6px;background:var(--border);border-radius:0;overflow:hidden;margin:1rem 0}
-.progress-bar div{height:100%;background:var(--accent);width:0%;transition:width .3s}
-
-
-button{
-  padding:.6rem 1.2rem;
-  border:none;
-  border-radius:0;
-  background:var(--accent);
-  color:#fff;
+/* Chapter bookmarks / tabs on left page */
+.bookmark-list{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-top:20px;
+}
+.bookmark{
+  position:relative;
+  padding:16px 20px 16px 30px;
+  background:linear-gradient(145deg, var(--wood) 0%, var(--wood-dark) 100%);
+  border:2px solid var(--gold);
+  border-left:4px solid var(--burgundy);
   cursor:pointer;
-  font-weight:bold;
-  font-family:"Cinzel",serif;
-  letter-spacing:1px;
-  transition:background .15s;
+  transition:all 0.3s ease;
+  color:var(--parchment);
+  box-shadow:0 3px 10px rgba(0,0,0,0.3);
 }
-button:hover{background:#a02}
+.bookmark::before{
+  content:"";
+  position:absolute;
+  left:-12px;
+  top:50%;
+  transform:translateY(-50%);
+  width:0;
+  height:0;
+  border-top:10px solid transparent;
+  border-bottom:10px solid transparent;
+  border-right:12px solid var(--burgundy);
+  transition:all 0.3s;
+}
+.bookmark:hover{
+  transform:translateX(8px);
+  border-color:var(--gold-light);
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
+}
+.bookmark:hover::before{
+  border-right-color:var(--gold);
+}
+.bookmark h3{
+  font-family:var(--font-cinzel);
+  font-size:1rem;
+  margin-bottom:4px;
+  letter-spacing:1px;
+}
+.bookmark p{
+  font-size:0.9rem;
+  color:var(--parchment-worn);
+  font-style:italic;
+  margin:0;
+}
+
+/* Read checkmark on bookmark */
+.bookmark.read::after{
+  content:"✓";
+  position:absolute;
+  top:8px;
+  right:12px;
+  color:var(--gold);
+  font-family:var(--font-cinzel);
+  font-size:1.2rem;
+  font-weight:bold;
+}
+
+/* Locked quiz bookmark */
+.bookmark.locked{
+  opacity:0.5;
+  cursor:not-allowed;
+  border-color:#555;
+}
+.bookmark.locked::before{
+  border-right-color:#555;
+}
+.bookmark.locked:hover{
+  transform:none;
+  border-color:#555;
+}
+
+/* Progress candle on left page */
+.progress-area{
+  margin-top:30px;
+  text-align:center;
+  padding-top:20px;
+  border-top:1px dashed var(--burgundy);
+}
+.progress-label{
+  font-family:var(--font-cinzel);
+  font-size:0.75rem;
+  color:var(--ink-light);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.progress-track{
+  height:6px;
+  background:rgba(139,69,19,0.2);
+  border-radius:3px;
+  overflow:hidden;
+  position:relative;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(to right, var(--burgundy), var(--gold));
+  width:0%;
+  transition:width 0.5s ease;
+  box-shadow:0 0 8px rgba(184,134,11,0.4);
+}
+
+/* Right page chapter content */
+.chapter-content{
+  display:none;
+  animation:pageTurn 0.5s ease;
+}
+.chapter-content.active{
+  display:block;
+}
+@keyframes pageTurn{
+  from{opacity:0;transform:translateX(20px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* Chapter headings with drop cap */
+.chapter-title{
+  font-family:var(--font-gothic);
+  font-size:2rem;
+  color:var(--burgundy-dark);
+  margin-bottom:20px;
+  line-height:1.2;
+  border-bottom:2px solid var(--gold);
+  padding-bottom:10px;
+}
+.chapter-body h3{
+  font-family:var(--font-cinzel);
+  font-size:1.15rem;
+  color:var(--burgundy-dark);
+  margin-top:1.5rem;
+  margin-bottom:0.6rem;
+  letter-spacing:0.5px;
+}
+.chapter-body h4{
+  font-family:var(--font-cinzel);
+  font-size:1rem;
+  color:var(--ink-light);
+  margin-top:1.2rem;
+  margin-bottom:0.5rem;
+  font-style:italic;
+}
+.chapter-body p{
+  margin-bottom:0.9rem;
+  text-align:justify;
+  hyphens:auto;
+}
+/* Drop cap for first paragraph */
+.chapter-body > p:first-of-type::first-letter{
+  font-family:var(--font-gothic);
+  font-size:3.2rem;
+  float:left;
+  line-height:0.8;
+  margin-right:8px;
+  margin-top:4px;
+  color:var(--burgundy);
+}
+
+/* Action buttons styled as wax seals */
+.wax-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 24px;
+  background:linear-gradient(145deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+  color:var(--parchment);
+  border:2px solid var(--gold);
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:all 0.2s;
+  margin-top:20px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.3);
+  position:relative;
+}
+.wax-btn:hover{
+  background:var(--burgundy-dark);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
+}
+.wax-btn::before{
+  content:"✦";
+  color:var(--gold);
+  font-size:1rem;
+}
+
+.back-btn{
+  background:transparent;
+  color:var(--ink-light);
+  border:2px solid var(--ink-light);
+  margin-bottom:16px;
+}
+.back-btn:hover{
+  background:rgba(61,43,31,0.1);
+  color:var(--ink);
+  border-color:var(--burgundy);
+}
+
+/* Quiz overlay parchment */
+.quiz-parchment{
+  display:none;
+  position:absolute;
+  inset:-30px;
+  background:linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  z-index:10;
+  padding:50px 40px;
+  box-shadow:
+    0 0 0 3px var(--burgundy),
+    0 0 0 6px var(--gold),
+    0 20px 60px rgba(0,0,0,0.5);
+  animation:unroll 0.6s ease;
+  overflow-y:auto;
+  max-height:calc(80vh + 60px);
+}
+.quiz-parchment.active{
+  display:block;
+}
+@keyframes unroll{
+  from{opacity:0;transform:translateY(-30px) scale(0.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.quiz-parchment::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
+  pointer-events:none;
+  mix-blend-mode:multiply;
+}
+
+.quiz-header{
+  text-align:center;
+  margin-bottom:30px;
+  padding-bottom:20px;
+  border-bottom:3px double var(--burgundy);
+}
+.quiz-header h2{
+  font-family:var(--font-gothic);
+  font-size:2rem;
+  color:var(--burgundy-dark);
+}
+.quiz-header p{
+  font-family:var(--font-cinzel);
+  font-size:0.9rem;
+  color:var(--ink-light);
+  margin-top:8px;
+}
+
+/* Quiz questions */
+.quiz-question{
+  margin-bottom:24px;
+  padding:16px 20px;
+  background:rgba(255,255,255,0.3);
+  border-left:3px solid var(--burgundy);
+  border-radius:0 4px 4px 0;
+}
+.quiz-question p{
+  font-family:var(--font-cinzel);
+  font-size:0.95rem;
+  color:var(--ink);
+  margin-bottom:12px;
+  font-weight:600;
+}
+.quiz-question label{
+  display:block;
+  padding:8px 12px;
+  margin:6px 0;
+  cursor:pointer;
+  transition:all 0.15s;
+  border:1px solid transparent;
+  font-size:1rem;
+}
+.quiz-question label:hover{
+  background:rgba(184,134,11,0.1);
+  border-color:var(--gold);
+}
+.quiz-question input[type="radio"]{
+  margin-right:10px;
+  accent-color:var(--burgundy);
+}
+
+/* Score board */
+#scoreBoard{
+  margin-top:24px;
+  padding:20px;
+  text-align:center;
+  font-family:var(--font-cinzel);
+  font-size:1.2rem;
+  border:2px solid;
+}
+.correct{
+  color:var(--burgundy-dark);
+  background:rgba(60,150,60,0.15);
+  border-color:#3c963c;
+}
+.wrong{
+  color:var(--burgundy-dark);
+  background:rgba(176,16,26,0.15);
+  border-color:var(--burgundy);
+}
+
+/* Certificate link button */
+.cert-btn{
+  display:inline-block;
+  margin-top:16px;
+  padding:14px 28px;
+  background:linear-gradient(145deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+  color:var(--parchment);
+  border:3px solid var(--gold);
+  font-family:var(--font-cinzel);
+  font-size:1rem;
+  letter-spacing:1px;
+  text-decoration:none;
+  box-shadow:0 6px 20px rgba(0,0,0,0.3);
+  transition:all 0.2s;
+}
+.cert-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  background:var(--burgundy-dark);
+}
+
+/* Footer below book */
+.book-footer{
+  text-align:center;
+  padding:1.5rem;
+  color:rgba(230,213,172,0.5);
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  letter-spacing:1px;
+  position:relative;
+  z-index:2;
+}
+
+/* Responsive: single page book on mobile */
+@media(max-width:768px){
+  .book{padding:10px;}
+  .pages{flex-direction:column;min-height:auto;}
+  .page{max-height:none;padding:25px 20px;}
+  .page-left{border-radius:4px 4px 0 0;border-right:none;border-bottom:1px solid rgba(139,69,19,0.2);}
+  .page-right{border-radius:0 0 4px 4px;}
+  .book-spine{display:none;}
+  .quiz-parchment{inset:-10px;padding:30px 20px;}
+  .desk-items{display:none;}
+  .book-header h1{font-size:1.6rem;}
+  .chapter-title{font-size:1.5rem;}
+}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Valorian Citizenship Course</h1>
-  <span>Study → Quiz → Certify</span>
-</header>
+<!-- Decorative desk items -->
+<div class="desk-items candle"></div>
+<div class="desk-items inkpot"></div>
 
-<main id="app">
+<div class="book-desk">
+  <div class="book">
+    <div class="book-spine"></div>
+    <div class="pages">
+      
+      <!-- LEFT PAGE: Table of Contents & Navigation -->
+      <div class="page page-left">
+        <div class="ruling"></div>
+        <div class="page-content">
+          <div class="book-header">
+            <h1>Valorian Citizenship</h1>
+            <span class="subtitle">Study → Quiz → Certify</span>
+          </div>
 
-  
-  <section id="chapterSelect">
-    <h2>Table of Contents</h2>
-    <div class="grid">
-      <div class="tile" onclick="openChapter(1)">
-        <h3>Book I – Sacred History</h3>
-        <p>Valthar, Detlef, Valseran, Adam, Priesthood</p>
+          <div id="chapterSelect">
+            <div class="bookmark-list">
+              <div class="bookmark" onclick="openChapter(1)" id="bm-1">
+                <h3>Book I – Sacred History</h3>
+                <p>Valthar, Detlef, Valseran, Adam, Priesthood</p>
+              </div>
+              <div class="bookmark" onclick="openChapter(2)" id="bm-2">
+                <h3>Book II – Culture & Society</h3>
+                <p>Identity, Springerstiefel, Wine, Social codes</p>
+              </div>
+              <div class="bookmark" onclick="openChapter(3)" id="bm-3">
+                <h3>Book III – Government & Law</h3>
+                <p>Constitution, VLC, Crimes, Ideology</p>
+              </div>
+              <div class="bookmark locked" id="quizBm" style="opacity:.4;pointer-events:none">
+                <h3>Final Quiz 🔒</h3>
+                <p>Complete all chapters to unlock</p>
+              </div>
+            </div>
+
+            <div class="progress-area">
+              <div class="progress-label">Study Progress</div>
+              <div class="progress-track">
+                <div class="progress-fill" id="progress"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="tile" onclick="openChapter(2)">
-        <h3>Book II – Culture & Society</h3>
-        <p>Identity, Springerstiefel, Wine, Social codes</p>
+
+      <!-- RIGHT PAGE: Content Area -->
+      <div class="page page-right">
+        <div class="ruling"></div>
+        <div class="page-content">
+          
+          <!-- Welcome state (default) -->
+          <div id="welcomePage">
+            <div class="chapter-title" style="text-align:center;border:none;margin-top:40px;">
+              Welcome, Aspirant
+            </div>
+            <p style="text-align:center;font-style:italic;color:var(--ink-light);margin-top:20px;">
+              Select a Book from the left index to begin thy studies.<br>
+              Read all three tomes to unlock the Royal Examination.
+            </p>
+            <div style="text-align:center;margin-top:40px;color:var(--gold);font-size:2rem;">❦</div>
+          </div>
+
+          <!-- Chapter view -->
+          <section id="chapterView" class="chapter-content">
+            <button class="wax-btn back-btn" onclick="backToIndex()">← Return to Index</button>
+            <article id="chapterBody" class="chapter-body"></article>
+            <button class="wax-btn" onclick="markRead()">✦ Mark as Read & Continue</button>
+          </section>
+
+          <!-- Quiz overlay parchment -->
+          <div id="quiz-wrapper" class="quiz-parchment">
+            <div class="quiz-header">
+              <h2>Royal Examination</h2>
+              <p>Answer at least 8 of 10 questions correctly to earn thy certification.</p>
+            </div>
+            <form id="quizForm"></form>
+            <button class="wax-btn" onclick="checkQuiz()" style="margin-top:20px;">✦ Submit Answers</button>
+            <div id="scoreBoard"></div>
+          </div>
+
+        </div>
       </div>
-      <div class="tile" onclick="openChapter(3)">
-        <h3>Book III – Government & Law</h3>
-        <p>Constitution, VLC, Crimes, Ideology</p>
-      </div>
-      <div class="tile" id="quizTile" style="opacity:.4;pointer-events:none">
-        <h3>Final Quiz 🔒</h3>
-        <p>Complete all chapters to unlock</p>
-      </div>
+
     </div>
-    <div class="progress-bar"><div id="progress"></div></div>
-  </section>
+  </div>
+</div>
 
-
-  <section id="chapterView" class="chapter-content">
-    <button onclick="backToIndex()">← Back to index</button>
-    <article id="chapterBody"></article>
-    <hr>
-    <button onclick="markRead()">Mark as read & continue</button>
-  </section>
-
-  
-  <section id="quiz-wrapper">
-    <h2>Official Citizenship Quiz</h2>
-    <p>Answer at least 8 / 10 to pass.</p>
-    <form id="quizForm"></form>
-    <button onclick="checkQuiz()">Submit answers</button>
-    <div id="scoreBoard"></div>
-  </section>
-
-</main>
-
-<footer>
-Valorian Bureau of Integration
-</footer>
+<div class="book-footer">Valorian Bureau of Integration | By Decree of the Crown</div>
 
 <script>
-
 const books=[
   {title:"Book I – Sacred History & Religion",html:`
   <h3>Chapter 1 – Genesis: Valthar and the Founding of Valor</h3>
   <p>Before memory, the land of Valmyra was ice, mountains and forests. An incorporeal consciousness—Valthar, the Silent Watcher—was intertwined with the land since its creation. He used the Fire of Valmyra, a geothermal wellspring, with infinite restraint to smooth ground, warm shelters and help the first humans found the city of Valor. When the people became self-sufficient he withdrew, vowing to return only against cataclysm.</p>
 
   <h3>Chapter 2 – Age of Detlef: the Compassionate Martyr</h3>
-  <p>After Valthar’s withdrawal the land grew harsher. To give the people a spiritual bridge, Valthar formed a son from their courage and from the Fire: Detlef. He alone heard Valthar’s whispers. Detlef inspired cooperation and comforted the sorrowful. Guided by Valthar, he persuaded King and people to build into the Underground for warmth and resources. A tragic fire erupted in a new cavern; Detlef and twenty workers were trapped and perished, becoming the first martyrs. The shaft was sealed in sorrow.</p>
+  <p>After Valthar's withdrawal the land grew harsher. To give the people a spiritual bridge, Valthar formed a son from their courage and from the Fire: Detlef. He alone heard Valthar's whispers. Detlef inspired cooperation and comforted the sorrowful. Guided by Valthar, he persuaded King and people to build into the Underground for warmth and resources. A tragic fire erupted in a new cavern; Detlef and twenty workers were trapped and perished, becoming the first martyrs. The shaft was sealed in sorrow.</p>
 
   <h3>Chapter 3 – Dawn of Valseran: the Guiding Light</h3>
-  <p>Valthar reshaped Detlef’s refined spirit, adding greater knowledge and power, creating Valseran. On the first anniversary of the tragedy Valseran emerged from the sealed mine, declaring the work must be completed in light. He taught: Valthar is the land’s foundation, Detlef the eternal seed of service, the Fire the land’s life-blood. Core tenets: Knowledge over ignorance, Community over individualism, Resilience in adversity. His gifts were catalysts for independence: “The greatest gift is the knowledge to no longer need the giver for that same gift.”</p>
+  <p>Valthar reshaped Detlef's refined spirit, adding greater knowledge and power, creating Valseran. On the first anniversary of the tragedy Valseran emerged from the sealed mine, declaring the work must be completed in light. He taught: Valthar is the land's foundation, Detlef the eternal seed of service, the Fire the land's life-blood. Core tenets: Knowledge over ignorance, Community over individualism, Resilience in adversity. His gifts were catalysts for independence: "The greatest gift is the knowledge to no longer need the giver for that same gift."</p>
 
   <h3>Chapter 4 – Imperial Revelation: Emperor Adam and the Reclamation</h3>
-  <p>Generations later faith was felt but unstructured. Emperor Adam, pious and visionary, was caught in a southern blizzard and sheltered in a cave. Valseran appeared: “Reclaim the depths—not as a tomb but as a heart of warmth and wisdom.” Adam pledged to obey. He launched the Great Reclamation, cleared the tunnels, and at the warmest cavern heart founded the Sanctum of the Deep Flame, first great Temple. Surface temples (Temples of the Ascendant Light) formed a national network, formalising Caninum and binding it to the state.</p>
+  <p>Generations later faith was felt but unstructured. Emperor Adam, pious and visionary, was caught in a southern blizzard and sheltered in a cave. Valseran appeared: "Reclaim the depths—not as a tomb but as a heart of warmth and wisdom." Adam pledged to obey. He launched the Great Reclamation, cleared the tunnels, and at the warmest cavern heart founded the Sanctum of the Deep Flame, first great Temple. Surface temples (Temples of the Ascendant Light) formed a national network, formalising Caninum and binding it to the state.</p>
 
   <h3>Chapter 5 – Structure of Faith: Priesthood & Liturgy</h3>
   <p><strong>Hierarchy</strong><br>
@@ -182,27 +721,27 @@ const books=[
   • Keepers of the Ways – hermits guarding sacred peaks & caverns.</p>
   <p><strong>Rite of Harmonious Observance</strong><br>
   1. Call to Presence – temple flame lit/tended.<br>
-  2. Invocation of Threefold Guidance – prayers to Valthar (steadfastness), Detlef (compassion), Valseran (wisdom).<br>
+  2. Invocation of Threefold Guidance – prayers to Valthar (steadfastness), Detlef (compassion), Valseran (wisdom).<<br>
   3. Readings from Sacred Narratives.<br>
   4. Sermon of Illumination.<br>
   5. Litany of Needs & Gratitude.<br>
-  6. Ritual of Shared Offering – Light (candles), Water (purification), or Crafted Intent (hand-made tokens).<br>
+  6. Ritual of Shared Offering – Light (candles), Water (purification), or Crafted Intent (hand-made tokens).<<br>
   7. Elite Communion – on high holy days Emperor & First Flamekeeper seek direct communion; results later announced.<br>
-  8. Closing Blessing – “Go forth in the strength of the Fire Within.”</p>
+  8. Closing Blessing – "Go forth in the strength of the Fire Within."</p>
   `},
   {title:"Book II – Culture & Society",html:`
   <h3>Chapter 1 – Valorian Identity</h3>
-  <p>Modern identity was forged during Emperor Adam’s authoritarian era (unofficially “Valorian Reich”). Citizens greeted: “Sieg Valoria.” Valorians are Brothers & Sisters; this bond can be revoked for acting against national interest. Arguments are normal but forgiveness is valued: “Hello, care and forgiveness … over hate and revenge.” Betrayal is not lightly forgiven. “Con-Valo” (Contra-Valoria) denotes those who hate, discriminate or mock traditional Valoria; they face ostracism. Displaying the flag is proud unless done by Con-Valo. Royal Family and Nobility enjoy deep respect; hierarchy is culturally ingrained despite democracy.</p>
+  <p>Modern identity was forged during Emperor Adam's authoritarian era (unofficially "Valorian Reich"). Citizens greeted: "Sieg Valoria." Valorians are Brothers & Sisters; this bond can be revoked for acting against national interest. Arguments are normal but forgiveness is valued: "Hello, care and forgiveness … over hate and revenge." Betrayal is not lightly forgiven. "Con-Valo" (Contra-Valoria) denotes those who hate, discriminate or mock traditional Valoria; they face ostracism. Displaying the flag is proud unless done by Con-Valo. Royal Family and Nobility enjoy deep respect; hierarchy is culturally ingrained despite democracy.</p>
 
   <h3>Chapter 2 – Cultural Staples</h3>
-  <p><strong>Springerstiefel</strong> – netherite boots first decorated by VIS-Agent BobDolf, gifted to Emperor Adam. During the “Rüstungs-Phase” they were issued under “Our Citizens are our Soldiers.” Now all Valorian netherite boots are Springerstiefel, symbolising strength & resilience.<br>
-  <strong>Wine</strong> – Valoria is among the largest wine producers. Signature sweet wine “Valorka” uses only domestic resources, boosted by Astari trade & state support.<br>
+  <p><strong>Springerstiefel</strong> – netherite boots first decorated by VIS-Agent BobDolf, gifted to Emperor Adam. During the "Rüstungs-Phase" they were issued under "Our Citizens are our Soldiers." Now all Valorian netherite boots are Springerstiefel, symbolising strength & resilience.<br>
+  <strong>Wine</strong> – Valoria is among the largest wine producers. Signature sweet wine "Valorka" uses only domestic resources, boosted by Astari trade & state support.<br>
   <strong>Cuisine</strong> – daily staples are fish & bread, supplied through the port of Noah.</p>
 
   <h3>Chapter 3 – Social Codes</h3>
   <p>Welcome those who genuinely seek integration. Grave offences:<br>
-  • Recreational drugs (only alcohol embraced).<br>
-  • “Wild people/animals” slur – deemed racist after Elytherian insults.<br>
+  • Recreational drugs (only alcohol embraced).<<br>
+  • "Wild people/animals" slur – deemed racist after Elytherian insults.<br>
   • Foreign propaganda (except allies) – illegal since Adam era.<br>
   • Communism – utterly despised; banned by 100 % popular vote.</p>
   `},
@@ -212,16 +751,16 @@ const books=[
 
   <h3>Chapter 2 – Governance: Democracy with Royal Authority</h3>
   <p>Citizen → complaint/proposal → VRC devises solution → vote tier:<br>
-  • International concern → People’s Representative Council (PRC) → CBU vote.<br>
+  • International concern → People's Representative Council (PRC) → CBU vote.<br>
   • National concern → VRC vote.<br>
   • Popular issue → citizen-wide vote.<br>
-  King & Lord have final say only inside PRC. King’s combined power must never exceed rest of PRC; majority of citizens can force re-vote.</p>
+  King & Lord have final say only inside PRC. King's combined power must never exceed rest of PRC; majority of citizens can force re-vote.</p>
 
   <h3>Chapter 3 – Valorian Law Codex (VLC) highlights</h3>
   <p><strong>Treason & Rebellion</strong> – 10-30 days imprisonment, exile or loss of citizenship.<br>
-  <strong>Symbolic Disloyalty</strong> (“Con-Valo” activity, insulting flag/anthem/King) – fines $500-$3 000 or up to 7 days imprisonment.<br>
+  <strong>Symbolic Disloyalty</strong> ("Con-Valo" activity, insulting flag/anthem/King) – fines $500-$3 000 or up to 7 days imprisonment.<br>
   <strong>Theft</strong> – return goods + 125 % repayment or up to 10 days jail.<br>
-  <strong>Drugs</strong> – 5-18 days imprisonment + confiscation (medical/scientific licences exempt).<br>
+  <strong>Drugs</strong> – 5-18 days imprisonment + confiscation (medical/scientific licences exempt).<<br>
   <strong>Cultural Protection</strong> – vandalising monuments: up to $5 000 fine or restoration duty.</p>
 
   <h3>Chapter 4 – National Ideology</h3>
@@ -231,7 +770,7 @@ const books=[
 
 const quiz = [
   {
-    q: "During the Great Dig, Detlef’s workforce originally descended in search of what PRIMARY resource that the surface had lost?",
+    q: "During the Great Dig, Detlef's workforce originally descended in search of what PRIMARY resource that the surface had lost?",
     a: ["geothermal warmth", "warmth"],
     opts: ["Precious metals", "Geothermal warmth", "Underground rivers", "Coal seams"]
   },
@@ -256,12 +795,12 @@ const quiz = [
     opts: ["Obsidian crown", "Springerstiefel", "Deep-flame tabard", "Adamite pickaxe"]
   },
   {
-    q: "According to constitutional checks, the King’s combined voting power inside the PRC must NEVER exceed what numerical limit?",
+    q: "According to constitutional checks, the King's combined voting power inside the PRC must NEVER exceed what numerical limit?",
     a: ["the combined power of all other VRC members", "all other PRC members", "remaining members"],
     opts: ["Fifty-one percent", "Two-thirds majority", "The combined power of all other VRC members", "Simple plurality"]
   },
   {
-    q: "Which act is EXPLICITLY listed under ‘Anti-Traditionalist Activity’ (Art. 6.3 VLC)?",
+    q: "Which act is EXPLICITLY listed under 'Anti-Traditionalist Activity' (Art. 6.3 VLC)?",
     a: ["displaying the pre-reform Valorian flag"],
     opts: ["Public drunkenness", "Displaying the pre-reform Valorian flag", "Refusing to wear Springerstiefel", "Speaking Elytherian in public"]
   },
@@ -282,40 +821,53 @@ const quiz = [
   }
 ];
 
-let readStatus=[false,false,false]; // one per book
+let readStatus=[false,false,false];
 const STORAGE_KEY='valoria_read';
-
 
 function init(){
   const saved=localStorage.getItem(STORAGE_KEY);
   if(saved) readStatus=JSON.parse(saved);
   updateUI();
 }
+
 function updateUI(){
   let done=readStatus.filter(Boolean).length;
   document.getElementById('progress').style.width=(done/3*100)+'%';
+  
+  // Mark bookmarks as read
+  readStatus.forEach((read, i) => {
+    const bm = document.getElementById('bm-' + (i+1));
+    if(bm) {
+      if(read) bm.classList.add('read');
+      else bm.classList.remove('read');
+    }
+  });
+  
   if(done===3){
-    const tile=document.getElementById('quizTile');
+    const tile=document.getElementById('quizBm');
     tile.style.opacity='1';
     tile.style.pointerEvents='auto';
-    tile.innerHTML='<h3>Final Quiz ✓</h3><p>Click to start the 10-question test</p>';
+    tile.classList.remove('locked');
+    tile.innerHTML='<h3>Final Quiz ✓</h3><p>Click to begin the Royal Examination</p>';
     tile.onclick=()=>startQuiz();
   }
 }
+
 function backToIndex(){
-  document.getElementById('chapterSelect').style.display='block';
+  document.getElementById('welcomePage').style.display='block';
   document.getElementById('chapterView').classList.remove('active');
   document.getElementById('quiz-wrapper').classList.remove('active');
 }
 
-
 function openChapter(n){
-  document.getElementById('chapterSelect').style.display='none';
+  document.getElementById('welcomePage').style.display='none';
   document.getElementById('chapterView').classList.add('active');
+  document.getElementById('quiz-wrapper').classList.remove('active');
   document.getElementById('chapterBody').innerHTML=
-    `<h2>${books[n-1].title}</h2>`+books[n-1].html;
+    `<div class="chapter-title">${books[n-1].title}</div>`+books[n-1].html;
   window.currentBook=n;
 }
+
 function markRead(){
   readStatus[currentBook-1]=true;
   localStorage.setItem(STORAGE_KEY,JSON.stringify(readStatus));
@@ -323,21 +875,22 @@ function markRead(){
   backToIndex();
 }
 
-
 function startQuiz(){
-  document.getElementById('chapterSelect').style.display='none';
+  document.getElementById('welcomePage').style.display='none';
+  document.getElementById('chapterView').classList.remove('active');
   document.getElementById('quiz-wrapper').classList.add('active');
   const form=document.getElementById('quizForm');
   form.innerHTML='';
   quiz.forEach((Q,i)=>{
     const div=document.createElement('div');
-    div.style.marginBottom='1rem';
-    div.innerHTML=`<p><strong>${i+1}. ${Q.q}</strong></p>`+
-      Q.opts.map(o=>`<label><input type="radio" name="q${i}" value="${o}"> ${o}</label><br>`).join('');
+    div.className='quiz-question';
+    div.innerHTML=`<p>${i+1}. ${Q.q}</p>`+
+      Q.opts.map(o=>`<label><input type="radio" name="q${i}" value="${o}"> ${o}</label>`).join('');
     form.appendChild(div);
   });
   document.getElementById('scoreBoard').innerHTML='';
 }
+
 function checkQuiz(){
   let score = 0;
   quiz.forEach((Q,i)=>{
@@ -351,15 +904,15 @@ function checkQuiz(){
      `<div class="correct">
          You scored ${score} / ${quiz.length} (${pct.toFixed(0)} %) – PASS<br>
          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdgO28bKI6dltnzdrJAC2pfm5c0bZdPFEnFf_XC903rVwkq6Q/viewform?usp=header"
-            target="_blank" style="display:inline-block;margin-top:1rem;padding:.6rem 1.2rem;background:var(--accent);color:#fff;border-radius:6px;">
-            Proceed to official citizenship request form →
+            target="_blank" class="cert-btn">
+            Proceed to Official Citizenship Request →
          </a>
       </div>`;
   }else{
     board.innerHTML =
      `<div class="wrong">
          You scored ${score} / ${quiz.length} (${pct.toFixed(0)} %) – FAIL<br>
-         Review the material and retake the quiz.
+         Review the tomes and retake the examination.
       </div>`;
   }
 }
