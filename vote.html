@@ -1,160 +1,546 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poll Statistics Overview</title>
-    <style>
-    
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative&display=swap');
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Council War Room — Poll Statistics</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
 :root{
- 
-  --bg:#0c0b08;                 
-  --card:#14110e;               
-  --border:#4a3829;           
-  --accent:#c03;             
-  --text:#e8dfc8;           
-  --sub:#8a7d69;               
-
-
-  --gap:1.2rem;
-  font-family:"Cinzel", "Palatino Linotype", "Book Antiqua", Palatino, serif;
-  font-weight:400;
-  letter-spacing:.4px;
+  --parchment:#e6d5ac;
+  --parchment-dark:#d4c194;
+  --ink:#1a0f0a;
+  --ink-light:#3d2b1f;
+  --burgundy:#6b0f1a;
+  --burgundy-dark:#4a0a12;
+  --gold:#b8860b;
+  --gold-light:#daa520;
+  --wood:#3e2723;
+  --wood-dark:#281815;
+  --wood-light:#5d4037;
+  --map-green:#1a2f1a;
+  --map-brown:#3d2b1f;
+  --shadow:rgba(0,0,0,0.6);
+  
+  --font-gothic:'UnifrakturMaguntia', cursive;
+  --font-cinzel:'Cinzel', serif;
+  --font-body:'EB Garamond', serif;
 }
 
+*{box-sizing:border-box;margin:0;padding:0}
 
+html{background:#0a0806}
+
+/* War room — dark stone chamber with map table */
 body{
-  margin:0;
-  background:var(--bg);
-  background-image:
-    radial-gradient(circle at 25% 25%, #1a1612 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, #1a1612 1px, transparent 1px);
-  background-size:4px 4px;
-  color:var(--text);
+  font-family:var(--font-body);
+  color:var(--parchment);
   min-height:100vh;
   display:flex;
   flex-direction:column;
-}
-a{color:var(--accent);text-decoration:none}
-
-
-header,footer{
-  background:var(--card);
-  border-bottom:2px solid var(--accent);
-  box-shadow:0 2px 6px #0006;
-}
-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem}
-header h1{margin:0;font-size:1.8rem;font-family:"Cinzel Decorative",serif;letter-spacing:2px;text-shadow:1px 1px 2px #000}
-header span{font-weight:300;font-size:.9rem;color:var(--sub)}
-.mono{font-family:"Courier New",Courier,monospace}
-.badge{display:inline-block;background:var(--accent);color:#fff;padding:.15rem .35rem;border-radius:0;font-size:.65rem;margin-left:.4rem;font-family:"Cinzel",serif}
-
-
-main{flex:1;padding:2rem;max-width:1100px;margin:auto;width:100%}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--gap)}
-.tile{
-  background:linear-gradient(145deg, var(--card) 0%, #1a1612 100%);
-  border:1px solid var(--border);
-  border-radius:0;          
-  padding:1.5rem 1rem;
-  text-align:center;
-  transition:transform .15s,box-shadow .15s;
-  cursor:pointer;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(184,134,11,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(107,15,26,0.1) 0%, transparent 40%),
+    linear-gradient(180deg, #0f0d0b 0%, #1a1612 50%, #0f0d0b 100%);
   position:relative;
 }
-.tile:hover{transform:translateY(-3px);box-shadow:0 6px 20px #000c}
-.tile h3{margin:.4rem 0 .2rem;font-size:1.1rem;font-weight:600}
-.tile p{font-size:.85rem;color:var(--sub);margin:0}
-footer{
+
+/* Stone texture */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  mix-blend-mode:multiply;
+}
+
+/* Main war room */
+.war-room{
+  position:relative;
+  z-index:2;
+  max-width:1100px;
+  margin:0 auto;
+  width:100%;
+  padding:40px 20px;
+}
+
+/* Command banner header */
+.war-banner{
   text-align:center;
-  padding:1.2rem;
-  font-size:.8rem;
-  color:var(--sub);
-  border-bottom:none;
-  border-top:2px solid var(--accent);
+  margin-bottom:40px;
+  padding:30px;
+  background:linear-gradient(145deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+  border:4px solid var(--gold);
+  border-radius:4px;
+  box-shadow:
+    0 0 0 2px var(--wood-dark),
+    0 20px 60px var(--shadow),
+    inset 0 2px 4px rgba(255,255,255,0.05);
+  position:relative;
+}
+/* Banner tassels */
+.war-banner::before,
+.war-banner::after{
+  content:"▼";
+  position:absolute;
+  bottom:-20px;
+  color:var(--gold);
+  font-size:1.5rem;
+  text-shadow:0 2px 4px rgba(0,0,0,0.5);
+}
+.war-banner::before{left:30px;}
+.war-banner::after{right:30px;}
+
+.war-banner h1{
+  font-family:var(--font-gothic);
+  font-size:2.6rem;
+  color:var(--parchment);
+  text-shadow:2px 2px 6px rgba(0,0,0,0.8);
+  letter-spacing:2px;
+  line-height:1.1;
+}
+.war-banner .subtitle{
+  font-family:var(--font-cinzel);
+  font-size:0.9rem;
+  color:var(--gold);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  display:block;
+  margin-top:8px;
+}
+.war-banner .divider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  margin-top:12px;
+  color:var(--gold);
+  font-size:1.2rem;
+}
+.war-banner .divider::before,
+.war-banner .divider::after{
+  content:"";
+  display:block;
+  width:80px;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--gold), transparent);
 }
 
+/* The Map Table — main tactical display */
+.map-table{
+  position:relative;
+  margin-bottom:40px;
+  padding:30px;
+  background:linear-gradient(145deg, var(--wood) 0%, var(--wood-dark) 100%);
+  border:4px solid var(--gold);
+  border-radius:8px;
+  box-shadow:
+    0 0 0 2px var(--burgundy),
+    0 20px 60px var(--shadow),
+    inset 0 2px 4px rgba(255,255,255,0.03);
+}
+/* Table legs illusion */
+.map-table::before{
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:60px;
+  right:60px;
+  height:15px;
+  background:linear-gradient(to bottom, var(--wood-dark), #0f0a08);
+  border-radius:0 0 4px 4px;
+}
+/* Brass corner plates */
+.map-table::after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  border:1px solid rgba(184,134,11,0.3);
+  border-radius:4px;
+  pointer-events:none;
+}
 
-.poll-item{
-  background:var(--card);
-  border:1px solid var(--border);
+/* Tactical overview cards on the map table */
+.tactical-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:16px;
+  margin-bottom:30px;
+  position:relative;
+  z-index:2;
+}
+
+.tactical-card{
+  background:linear-gradient(135deg, rgba(26,18,14,0.9) 0%, rgba(42,30,24,0.9) 100%);
+  border:2px solid var(--gold);
+  padding:20px 15px;
+  text-align:center;
+  position:relative;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  transition:all 0.2s;
+}
+.tactical-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.5);
+  border-color:var(--gold-light);
+}
+/* Brass rivets */
+.tactical-card::before,
+.tactical-card::after{
+  content:"";
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:var(--gold);
+  border-radius:50%;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,0.5);
+}
+.tactical-card::before{top:6px;left:6px;}
+.tactical-card::after{top:6px;right:6px;}
+
+.tactical-value{
+  font-family:var(--font-cinzel);
+  font-size:1.8rem;
+  color:var(--gold-light);
+  text-shadow:0 0 10px rgba(218,165,32,0.3);
+  margin-bottom:6px;
+}
+.tactical-label{
+  font-family:var(--font-cinzel);
+  font-size:0.65rem;
+  color:var(--parchment-dark);
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+/* Intelligence briefings (fun facts) */
+.intel-brief{
+  position:relative;
+  margin-bottom:40px;
+  padding:30px;
+  background:linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  color:var(--ink);
+  border:3px solid var(--burgundy);
+  border-radius:4px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4);
+}
+/* Parchment texture */
+.intel-brief::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 20% 30%, rgba(139,69,19,0.06) 0%, transparent 50%);
+  pointer-events:none;
+  mix-blend-mode:multiply;
+}
+.intel-brief h2{
+  font-family:var(--font-cinzel);
+  font-size:1.3rem;
+  color:var(--burgundy-dark);
+  margin-bottom:20px;
+  border-bottom:2px solid var(--gold);
+  padding-bottom:10px;
+  position:relative;
+  z-index:2;
+}
+.intel-item{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin:12px 0;
+  padding:12px 14px;
+  background:rgba(255,255,255,0.3);
+  border-left:3px solid var(--burgundy);
+  border-radius:0 4px 4px 0;
+  position:relative;
+  z-index:2;
+  transition:all 0.2s;
+}
+.intel-item:hover{
+  background:rgba(255,255,255,0.5);
+  transform:translateX(4px);
+}
+.intel-icon{
+  font-size:1.4rem;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.intel-text{
+  font-size:1rem;
+  line-height:1.5;
+}
+.intel-text strong{
+  color:var(--burgundy-dark);
+  font-family:var(--font-cinzel);
+}
+
+/* Battle reports (poll items) */
+.battle-reports{
+  position:relative;
+  z-index:2;
+}
+.battle-reports h2{
+  font-family:var(--font-cinzel);
+  font-size:1.5rem;
+  color:var(--parchment);
+  text-align:center;
+  margin-bottom:30px;
+  letter-spacing:3px;
+}
+
+/* Each poll as a campaign report */
+.campaign-report{
+  position:relative;
+  margin-bottom:24px;
+  padding:24px 28px;
+  background:linear-gradient(145deg, var(--wood) 0%, var(--wood-dark) 100%);
+  border:3px solid var(--burgundy);
+  border-radius:4px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
+  transition:all 0.2s;
+}
+.campaign-report:hover{
+  border-color:var(--gold);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+/* Wax seal on report */
+.campaign-report::before{
+  content:"";
+  position:absolute;
+  top:-12px;
+  right:20px;
+  width:36px;
+  height:36px;
+  background:radial-gradient(circle at 35% 35%, var(--burgundy), var(--burgundy-dark));
+  border-radius:50%;
+  border:2px solid var(--gold);
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.4),
+    inset -2px -2px 6px rgba(0,0,0,0.2);
+  z-index:3;
+}
+.campaign-report::after{
+  content:"⚜";
+  position:absolute;
+  top:-8px;
+  right:24px;
+  color:var(--gold);
+  font-size:1.2rem;
+  z-index:4;
+  text-shadow:0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Report header */
+.report-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:16px;
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(184,134,11,0.3);
+}
+.report-title{
+  font-family:var(--font-cinzel);
+  font-size:1.15rem;
+  color:var(--parchment);
+  font-weight:600;
+  letter-spacing:0.5px;
+  line-height:1.3;
+}
+.report-date{
+  font-family:var(--font-cinzel);
+  font-size:0.75rem;
+  color:var(--gold);
+  letter-spacing:1px;
+  white-space:nowrap;
+  margin-left:16px;
+  padding:4px 10px;
+  background:rgba(0,0,0,0.3);
+  border:1px solid var(--gold);
+}
+
+/* Total votes line */
+.report-tally{
+  font-family:var(--font-cinzel);
+  font-size:0.8rem;
+  color:var(--parchment-dark);
+  letter-spacing:1px;
+  margin-bottom:16px;
+  text-transform:uppercase;
+}
+
+/* Regiment bars (option results) */
+.regiment{
+  margin:10px 0;
+  padding:14px 16px;
+  background:linear-gradient(135deg, rgba(26,18,14,0.6) 0%, rgba(42,30,24,0.6) 100%);
+  border:1px solid var(--wood-light);
+  border-left:4px solid var(--burgundy);
+  position:relative;
+  transition:all 0.2s;
+}
+.regiment:hover{
+  border-left-color:var(--gold);
+  background:linear-gradient(135deg, rgba(26,18,14,0.8) 0%, rgba(42,30,24,0.8) 100%);
+}
+.regiment.winner{
+  border-left-color:var(--gold);
+  border-color:var(--gold);
+  background:linear-gradient(135deg, rgba(45,80,22,0.15) 0%, rgba(26,18,14,0.8) 100%);
+}
+
+.regiment-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+.regiment-name{
+  font-family:var(--font-cinzel);
+  font-size:0.95rem;
+  color:var(--parchment);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+/* Winner banner */
+.victor-banner{
+  display:inline-block;
+  background:var(--gold);
+  color:var(--wood-dark);
+  font-family:var(--font-cinzel);
+  font-size:0.6rem;
+  padding:2px 8px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  margin-left:8px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+.regiment-stats{
+  font-family:var(--font-cinzel);
+  font-size:0.8rem;
+  color:var(--parchment-dark);
+}
+
+/* Battle line (progress bar) */
+.battle-line{
+  height:8px;
+  background:rgba(0,0,0,0.4);
   border-radius:0;
-  padding:1.5rem;
-  margin-bottom:1rem;
-  box-shadow:0 2px 4px #0004;
+  overflow:hidden;
+  position:relative;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.5);
 }
-.poll-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-.poll-title{font-size:1.3rem;font-weight:bold;color:var(--accent);font-family:"Cinzel",serif}
-.poll-date{color:var(--sub);font-size:.9rem}
-.option-result{background:#111;padding:.8rem;margin:.5rem 0;border-left:3px solid var(--accent)}
-.option-header{display:flex;justify-content:space-between;margin-bottom:.3rem}
-.progress-bar{background:#222;height:6px;border-radius:0;overflow:hidden}
-.progress-fill{background:var(--accent);height:100%;transition:width .3s ease}
-.stats-section{background:var(--card);border:1px solid var(--border);border-radius:0;padding:2rem;margin:2rem 0}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
-.stat-card{background:#111;padding:1rem;border-radius:0;text-align:center}
-.stat-value{font-size:1.8rem;font-weight:bold;color:var(--accent);font-family:"Cinzel",serif}
-.stat-label{color:var(--sub);font-size:.8rem;margin-top:.3rem}
-.fun-facts{background:#0a0a0a;border:1px dashed var(--accent);border-radius:0;padding:1.5rem;margin:2rem 0}
-.fact-item{display:flex;align-items:center;gap:1rem;margin:.8rem 0;padding:.5rem;background:#111;border-radius:0}
-.fact-icon{font-size:1.5rem}
-    </style>
+.battle-fill{
+  height:100%;
+  background:linear-gradient(to right, var(--burgundy), var(--gold));
+  transition:width 0.6s ease;
+  position:relative;
+}
+.battle-fill::after{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:2px;
+  height:100%;
+  background:var(--gold-light);
+  box-shadow:0 0 6px var(--gold-light);
+}
+/* Winner gets gold fill */
+.regiment.winner .battle-fill{
+  background:linear-gradient(to right, var(--gold), var(--gold-light));
+}
+
+/* Footer */
+.war-footer{
+  text-align:center;
+  padding:2rem;
+  margin-top:20px;
+  color:rgba(230,213,172,0.4);
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  letter-spacing:2px;
+  position:relative;
+  z-index:2;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .war-banner h1{font-size:1.8rem;}
+  .war-banner{padding:20px;}
+  .tactical-grid{grid-template-columns:repeat(2, 1fr);}
+  .tactical-value{font-size:1.4rem;}
+  .report-header{flex-direction:column;gap:8px;}
+  .report-date{margin-left:0;}
+  .campaign-report{padding:18px 16px;}
+  .campaign-report::before,
+  .campaign-report::after{display:none;}
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>POLL STATISTICS <span>overview</span></h1>
-        <span class="mono">// hard-coded data vault</span>
-    </header>
 
-    <main>
-      
-        <div class="fun-facts">
-            <h2 style="margin-top:0;color:var(--accent)">📊 FUN FACTS</h2>
-            <div id="funFactsContainer"></div>
-        </div>
+<div class="war-room">
 
-        <div class="stats-section">
-            <h2>OVERALL STATISTICS</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="totalPolls">0</div>
-                    <div class="stat-label">TOTAL POLLS</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="totalVotes">0</div>
-                    <div class="stat-label">TOTAL VOTES</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="avgVotesPerPoll">0</div>
-                    <div class="stat-label">AVG VOTES/POLL</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="mostPopularOption">-</div>
-                    <div class="stat-label">MOST VOTED OPTION</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="mostActivePoll">-</div>
-                    <div class="stat-label">MOST ACTIVE POLL</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="leastActivePoll">-</div>
-                    <div class="stat-label">LEAST ACTIVE POLL</div>
-                </div>
-            </div>
-        </div>
+  <div class="war-banner">
+    <h1>Council War Room</h1>
+    <span class="subtitle">Tactical Poll Overview</span>
+    <div class="divider">❦ ❦ ❦</div>
+  </div>
 
-        
-        <div id="pollsList"></div>
-    </main>
+  <!-- Map Table with tactical overview -->
+  <div class="map-table">
+    <div class="tactical-grid">
+      <div class="tactical-card">
+        <div class="tactical-value" id="totalPolls">0</div>
+        <div class="tactical-label">Campaigns</div>
+      </div>
+      <div class="tactical-card">
+        <div class="tactical-value" id="totalVotes">0</div>
+        <div class="tactical-label">Total Votes</div>
+      </div>
+      <div class="tactical-card">
+        <div class="tactical-value" id="avgVotesPerPoll">0</div>
+        <div class="tactical-label">Avg / Campaign</div>
+      </div>
+      <div class="tactical-card">
+        <div class="tactical-value" id="mostPopularOption" style="font-size:1.2rem;">-</div>
+        <div class="tactical-label">Strongest Regiment</div>
+      </div>
+      <div class="tactical-card">
+        <div class="tactical-value" id="mostActivePoll" style="font-size:0.9rem;">-</div>
+        <div class="tactical-label">Fiercest Battle</div>
+      </div>
+      <div class="tactical-card">
+        <div class="tactical-value" id="leastActivePoll" style="font-size:0.9rem;">-</div>
+        <div class="tactical-label">Quietest Front</div>
+      </div>
+    </div>
+  </div>
 
-    <footer>
-        poll statistics vault
-    </footer>
+  <!-- Intelligence Briefings -->
+  <div class="intel-brief">
+    <h2>Intelligence Briefings</h2>
+    <div id="funFactsContainer"></div>
+  </div>
 
-    <script>
-     //edit Poles here:
+  <!-- Battle Reports -->
+  <div class="battle-reports">
+    <h2>Campaign Reports</h2>
+    <div id="pollsList"></div>
+  </div>
+
+</div>
+
+<div class="war-footer">Royal Council Archives | Classified Strategic Data</div>
+
+<script>
 const POLLS = [
   {
     id: "poll_001",
@@ -177,7 +563,7 @@ const POLLS = [
       { text: "Citizen vote", votes: 3 }
     ]
   },
-     {
+  {
     id: "poll_003",
     title: "Should Valoria leave the UUR?",
     date: "2025-08-11",
@@ -186,7 +572,7 @@ const POLLS = [
       { text: "No", votes: 2 },
     ]
   },
-       {
+  {
     id: "poll_004",
     title: "Adopt the new constitution and make Dwayne governor of Frostborne",
     date: "2025-10-11",
@@ -195,7 +581,7 @@ const POLLS = [
       { text: "No", votes: 0 },
     ]
   },
-        {
+  {
     id: "poll_005",
     title: "Recognise Westenberg officially as an Valorian City (Only VRC)",
     date: "2025-22-11",
@@ -205,7 +591,7 @@ const POLLS = [
       { text: "Citizen vote", votes: 1 }
     ]
   },
-       {
+  {
     id: "poll_006",
     title: "Lord of Westenberg",
     date: "2025-22-11",
@@ -216,138 +602,130 @@ const POLLS = [
     ]
   }
 ];
+
+function calculateStats() {
+  const stats = {
+    totalPolls: POLLS.length,
+    totalVotes: 0,
+    mostPopularOption: { name: '', votes: 0 },
+    mostActivePoll: { name: '', votes: 0 },
+    leastActivePoll: { name: '', votes: Infinity },
+    allOptions: []
+  };
+
+  POLLS.forEach(poll => {
+    const pollTotal = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+    stats.totalVotes += pollTotal;
+
+    if (pollTotal > stats.mostActivePoll.votes) {
+      stats.mostActivePoll = { name: poll.title, votes: pollTotal };
+    }
+
+    if (pollTotal < stats.leastActivePoll.votes) {
+      stats.leastActivePoll = { name: poll.title, votes: pollTotal };
+    }
+
+    poll.options.forEach(option => {
+      stats.allOptions.push({ name: option.text, votes: option.votes, poll: poll.title });
+      if (option.votes > stats.mostPopularOption.votes) {
+        stats.mostPopularOption = { name: option.text, votes: option.votes };
+      }
+    });
+  });
+
+  stats.avgVotesPerPoll = Math.round(stats.totalVotes / stats.totalPolls);
+  return stats;
+}
+
+function generateFunFacts(stats) {
+  const facts = [
+    { icon: '⚔', text: `Strongest regiment: <strong>${stats.mostPopularOption.name}</strong> with ${stats.mostPopularOption.votes} soldiers` },
+    { icon: '🔥', text: `Fiercest battle: <strong>${stats.mostActivePoll.name}</strong> (${stats.mostActivePoll.votes} total forces)` },
+    { icon: '🏳', text: `Quietest front: <strong>${stats.leastActivePoll.name}</strong> (${stats.leastActivePoll.votes} total forces)` },
+    { icon: '📜', text: `Average forces per campaign: <strong>${stats.avgVotesPerPoll}</strong>` },
+    { icon: '🎯', text: `Total regiments fielded: <strong>${stats.allOptions.length}</strong>` }
+  ];
+
+  const uniqueVoters = Math.floor(stats.totalVotes * 0.7);
+  facts.push({ icon: '👥', text: `Estimated unique soldiers: <strong>${uniqueVoters}</strong>` });
+
+  const optionCounts = {};
+  stats.allOptions.forEach(opt => {
+    optionCounts[opt.name] = (optionCounts[opt.name] || 0) + 1;
+  });
+  
+  const multiPollOptions = Object.entries(optionCounts).filter(([_, count]) => count > 1);
+  if (multiPollOptions.length > 0) {
+    facts.push({ 
+      icon: '🔄', 
+      text: `Regiments appearing in multiple campaigns: ${multiPollOptions.map(([name, count]) => `<strong>${name}</strong> (${count}x)`).join(', ')}` 
+    });
+  }
+
+  return facts;
+}
+
+function render() {
+  const stats = calculateStats();
+  const funFacts = generateFunFacts(stats);
+
+  document.getElementById('totalPolls').textContent = stats.totalPolls;
+  document.getElementById('totalVotes').textContent = stats.totalVotes.toLocaleString();
+  document.getElementById('avgVotesPerPoll').textContent = stats.avgVotesPerPoll;
+  document.getElementById('mostPopularOption').textContent = stats.mostPopularOption.name;
+  document.getElementById('mostActivePoll').textContent = stats.mostActivePoll.name.length > 12 ? stats.mostActivePoll.name.substring(0, 12) + '...' : stats.mostActivePoll.name;
+  document.getElementById('leastActivePoll').textContent = stats.leastActivePoll.name.length > 12 ? stats.leastActivePoll.name.substring(0, 12) + '...' : stats.leastActivePoll.name;
+
+  const factsContainer = document.getElementById('funFactsContainer');
+  factsContainer.innerHTML = funFacts.map(fact => `
+    <div class="intel-item">
+      <span class="intel-icon">${fact.icon}</span>
+      <span class="intel-text">${fact.text}</span>
+    </div>
+  `).join('');
+
+  const pollsList = document.getElementById('pollsList');
+  pollsList.innerHTML = POLLS.map(poll => {
+    const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
+    const maxVotes = Math.max(...poll.options.map(o => o.votes));
+    
+    return `
+      <div class="campaign-report">
+        <div class="report-header">
+          <div class="report-title">${poll.title}</div>
+          <div class="report-date">${new Date(poll.date).toLocaleDateString()}</div>
+        </div>
         
-        function calculateStats() {
-            const stats = {
-                totalPolls: POLLS.length,
-                totalVotes: 0,
-                mostPopularOption: { name: '', votes: 0 },
-                mostActivePoll: { name: '', votes: 0 },
-                leastActivePoll: { name: '', votes: Infinity },
-                allOptions: []
-            };
-
-            POLLS.forEach(poll => {
-                const pollTotal = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
-                stats.totalVotes += pollTotal;
-
-              
-                if (pollTotal > stats.mostActivePoll.votes) {
-                    stats.mostActivePoll = { name: poll.title, votes: pollTotal };
-                }
-
-                if (pollTotal < stats.leastActivePoll.votes) {
-                    stats.leastActivePoll = { name: poll.title, votes: pollTotal };
-                }
-
-                poll.options.forEach(option => {
-                    stats.allOptions.push({ name: option.text, votes: option.votes, poll: poll.title });
-                    if (option.votes > stats.mostPopularOption.votes) {
-                        stats.mostPopularOption = { name: option.text, votes: option.votes };
-                    }
-                });
-            });
-
-            stats.avgVotesPerPoll = Math.round(stats.totalVotes / stats.totalPolls);
-            
-            return stats;
-        }
-
-        function generateFunFacts(stats) {
-            const facts = [
-                { icon: '👑', text: `Most voted option ever: <strong>${stats.mostPopularOption.name}</strong> with ${stats.mostPopularOption.votes} votes` },
-                { icon: '🔥', text: `Most active poll: <strong>${stats.mostActivePoll.name}</strong> (${stats.mostActivePoll.votes} total votes)` },
-                { icon: '😴', text: `Least active poll: <strong>${stats.leastActivePoll.name}</strong> (${stats.leastActivePoll.votes} total votes)` },
-                { icon: '📊', text: `Average votes per poll: <strong>${stats.avgVotesPerPoll}</strong>` },
-                { icon: '🎯', text: `Total options across all polls: <strong>${stats.allOptions.length}</strong>` }
-            ];
-
-           
-            const uniqueVoters = Math.floor(stats.totalVotes * 0.7); 
-            facts.push({ icon: '👥', text: `Estimated unique voters: <strong>${uniqueVoters}</strong>` });
-
-           
-            const optionCounts = {};
-            stats.allOptions.forEach(opt => {
-                optionCounts[opt.name] = (optionCounts[opt.name] || 0) + 1;
-            });
-            
-            const multiPollOptions = Object.entries(optionCounts).filter(([_, count]) => count > 1);
-            if (multiPollOptions.length > 0) {
-                facts.push({ 
-                    icon: '🔄', 
-                    text: `Options appearing in multiple polls: ${multiPollOptions.map(([name, count]) => `<strong>${name}</strong> (${count}x)`).join(', ')}` 
-                });
-            }
-
-            return facts;
-        }
-
-       
-        function render() {
-            const stats = calculateStats();
-            const funFacts = generateFunFacts(stats);
-
-            
-            document.getElementById('totalPolls').textContent = stats.totalPolls;
-            document.getElementById('totalVotes').textContent = stats.totalVotes.toLocaleString();
-            document.getElementById('avgVotesPerPoll').textContent = stats.avgVotesPerPoll;
-            document.getElementById('mostPopularOption').textContent = stats.mostPopularOption.name;
-            document.getElementById('mostActivePoll').textContent = stats.mostActivePoll.name;
-            document.getElementById('leastActivePoll').textContent = stats.leastActivePoll.name;
-
-            const factsContainer = document.getElementById('funFactsContainer');
-            factsContainer.innerHTML = funFacts.map(fact => `
-                <div class="fact-item">
-                    <span class="fact-icon">${fact.icon}</span>
-                    <span>${fact.text}</span>
-                </div>
-            `).join('');
-
-            const pollsList = document.getElementById('pollsList');
-            pollsList.innerHTML = POLLS.map(poll => {
-                const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
-                const maxVotes = Math.max(...poll.options.map(o => o.votes));
-                
-                return `
-                    <div class="poll-item">
-                        <div class="poll-header">
-                            <div class="poll-title">${poll.title}</div>
-                            <div class="poll-date">${new Date(poll.date).toLocaleDateString()}</div>
-                        </div>
-                        
-                        <div style="margin-bottom:1rem;color:var(--sub);font-size:.9rem">
-                            Total votes: ${totalVotes.toLocaleString()}
-                        </div>
-                        
-                        ${poll.options.map(option => {
-                            const percentage = totalVotes > 0 ? (option.votes / totalVotes * 100).toFixed(1) : 0;
-                            const isWinner = option.votes === maxVotes && totalVotes > 0;
-                            
-                            return `
-                                <div class="option-result">
-                                    <div class="option-header">
-                                        <span>
-                                            ${option.text} 
-                                            ${isWinner ? '<span class="badge">WINNER</span>' : ''}
-                                        </span>
-                                        <span style="color:var(--sub);font-size:.8rem">
-                                            ${option.votes} votes • ${percentage}%
-                                        </span>
-                                    </div>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: ${percentage}%"></div>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                `;
-            }).join('');
-        }
-
+        <div class="report-tally">Total Forces: ${totalVotes.toLocaleString()}</div>
         
-        render();
-    </script>
+        ${poll.options.map(option => {
+          const percentage = totalVotes > 0 ? (option.votes / totalVotes * 100).toFixed(1) : 0;
+          const isWinner = option.votes === maxVotes && totalVotes > 0;
+          
+          return `
+            <div class="regiment ${isWinner ? 'winner' : ''}">
+              <div class="regiment-header">
+                <span class="regiment-name">
+                  ${option.text}
+                  ${isWinner ? '<span class="victor-banner">Victor</span>' : ''}
+                </span>
+                <span class="regiment-stats">
+                  ${option.votes} votes • ${percentage}%
+                </span>
+              </div>
+              <div class="battle-line">
+                <div class="battle-fill" style="width: ${percentage}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+render();
+</script>
+
 </body>
 </html>
