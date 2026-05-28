@@ -1,282 +1,524 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valoria Timeline</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chronicle of Valoria</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parchment:#e6d5ac;
+  --parchment-dark:#d4c194;
+  --ink:#1a0f0a;
+  --ink-light:#3d2b1f;
+  --burgundy:#6b0f1a;
+  --burgundy-dark:#4a0a12;
+  --gold:#b8860b;
+  --gold-light:#daa520;
+  --wood:#3e2723;
+  --wood-dark:#281815;
+  --shadow:rgba(26,15,10,0.4);
+  
+  --font-gothic:'UnifrakturMaguntia', cursive;
+  --font-cinzel:'Cinzel', serif;
+  --font-body:'EB Garamond', serif;
+}
 
-    <!-- easy fonts --> 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+*{box-sizing:border-box;margin:0;padding:0}
 
-    <style>
-        :root{
-            --bg:#0c0b08;
-            --card:#14110e;
-            --border:#4a3829;
-            --accent:#c03;
-            --text:#e8dfc8;
-            --sub:#8a7d69;
-            --gap:1.2rem;
-            font-family: "Roboto", Arial, sans-serif;
-        }
+html{background:var(--wood-dark)}
 
-        *{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font-body);
+  color:var(--ink);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  position:relative;
+  line-height:1.6;
+  font-size:1.05rem;
+}
 
-        body{
-            background:var(--bg);
-            color:var(--text);
-            min-height:100vh;
-            display:flex;
-            flex-direction:column;
-            line-height:1.5;
-        }
+/* Parchment texture overlay */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 20% 30%, rgba(139,69,19,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(139,69,19,0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 80%, rgba(160,82,45,0.05) 0%, transparent 45%);
+  pointer-events:none;
+  z-index:1;
+  mix-blend-mode:multiply;
+}
 
-        .timeline-container{
-            max-width:1200px;
-            margin:0 auto;
-            padding:50px 20px;
-            flex:1;
-            width:100%;
-        }
+/* Frame */
+.page-frame{
+  position:fixed;
+  inset:20px;
+  border:2px solid var(--burgundy);
+  pointer-events:none;
+  z-index:2;
+}
+.page-frame::before{
+  content:"";
+  position:absolute;
+  inset:4px;
+  border:1px solid var(--gold);
+  opacity:0.5;
+}
+.corner{
+  position:fixed;
+  width:120px;
+  height:120px;
+  z-index:2;
+  pointer-events:none;
+  opacity:0.6;
+}
+.corner-tl{top:10px;left:10px;border-top:3px solid var(--burgundy);border-left:3px solid var(--burgundy);}
+.corner-tr{top:10px;right:10px;border-top:3px solid var(--burgundy);border-right:3px solid var(--burgundy);}
+.corner-bl{bottom:10px;left:10px;border-bottom:3px solid var(--burgundy);border-left:3px solid var(--burgundy);}
+.corner-br{bottom:10px;right:10px;border-bottom:3px solid var(--burgundy);border-right:3px solid var(--burgundy);}
+.corner::after{
+  content:"❦";
+  position:absolute;
+  color:var(--burgundy);
+  font-size:1.2rem;
+}
+.corner-tl::after{top:8px;left:8px;}
+.corner-tr::after{top:8px;right:8px;}
+.corner-bl::after{bottom:8px;left:8px;}
+.corner-br::after{bottom:8px;right:8px;}
 
-        h1{
-            text-align:center;
-            font-size:2.2rem;
-            margin-bottom:40px;
-            color:var(--accent);
-        }
+/* Container as an open book */
+.chronicle-container{
+  position:relative;
+  z-index:3;
+  max-width:1100px;
+  margin:0 auto;
+  padding:60px 20px;
+  flex:1;
+  width:100%;
+}
 
-        .era-marker{
-            text-align:center;
-            margin:60px 0 30px;
-        }
-        .era-marker h2{
-            font-size:1.6rem;
-            color:var(--accent);
-            text-transform:uppercase;
-            letter-spacing:2px;
-            display:inline-block;
-            padding:12px 24px;
-            background:var(--card);
-            border:2px solid var(--border);
-        }
+/* Title page style header */
+.chronicle-header{
+  text-align:center;
+  margin-bottom:50px;
+  padding-bottom:30px;
+  border-bottom:3px double var(--burgundy);
+}
+.chronicle-header h1{
+  font-family:var(--font-gothic);
+  font-size:3rem;
+  color:var(--burgundy-dark);
+  text-shadow:2px 2px 0px rgba(0,0,0,0.1);
+  letter-spacing:1px;
+  margin-bottom:0.5rem;
+}
+.chronicle-header .subtitle{
+  font-family:var(--font-cinzel);
+  font-size:0.9rem;
+  color:var(--ink-light);
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+.chronicle-header .divider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  margin-top:1rem;
+  color:var(--gold);
+  font-size:1.2rem;
+}
+.chronicle-header .divider::before,
+.chronicle-header .divider::after{
+  content:"";
+  display:block;
+  width:100px;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--gold), transparent);
+}
 
-        .timeline{
-            position:relative;
-            padding:20px 0;
-        }
-        .timeline::before{
-            content:'';
-            position:absolute;
-            left:50%;
-            transform:translateX(-50%);
-            width:4px;
-            height:100%;
-            background:var(--accent);
-        }
+/* Era / Book Chapter heading */
+.era-marker{
+  text-align:center;
+  margin:50px 0 40px;
+  position:relative;
+}
+.era-marker h2{
+  font-family:var(--font-cinzel);
+  font-size:1.4rem;
+  color:var(--burgundy-dark);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  display:inline-block;
+  padding:15px 40px;
+  background:linear-gradient(to bottom, rgba(212,193,148,0.6), rgba(230,213,172,0.3));
+  border:2px solid var(--burgundy);
+  position:relative;
+  box-shadow:0 4px 12px var(--shadow);
+}
+/* Decorative corners on era box */
+.era-marker h2::before,
+.era-marker h2::after{
+  content:"◆";
+  position:absolute;
+  color:var(--gold);
+  font-size:0.8rem;
+}
+.era-marker h2::before{top:6px;left:10px;}
+.era-marker h2::after{bottom:6px;right:10px;}
 
-        .timeline-dot{
-            position:absolute;
-            left:50%;
-            top:50%;
-            transform:translate(-50%,-50%);
-            width:24px;
-            height:24px;
-            background:var(--accent);
-            border-radius:50%;
-            border:3px solid var(--text);
-            z-index:1;
-        }
+/* Timeline spine */
+.timeline{
+  position:relative;
+  padding:20px 0;
+}
+.timeline::before{
+  content:'';
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  width:6px;
+  height:100%;
+  background:linear-gradient(to bottom, 
+    transparent 0%, 
+    var(--burgundy) 5%, 
+    var(--burgundy) 95%, 
+    transparent 100%);
+  border-left:1px solid var(--gold);
+  border-right:1px solid var(--gold);
+  box-shadow:inset 0 0 4px rgba(0,0,0,0.3);
+}
 
-        .timeline-item{
-            position:relative;
-            margin:40px 0;
-            opacity:0;
-            transform:translateY(30px);
-            animation:fadeInUp .8s ease forwards;
-        }
-        @keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+/* Timeline knot / seal instead of dot */
+.timeline-knot{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:28px;
+  height:28px;
+  background:var(--burgundy);
+  border:3px solid var(--gold);
+  z-index:1;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.timeline-knot::after{
+  content:"✦";
+  color:var(--gold);
+  font-size:0.9rem;
+}
 
-        .timeline-content{
-            width:45%;
-            padding:20px;
-            background:var(--card);
-            border:1px solid var(--border);
-            cursor:pointer;
-            transition:transform .15s, box-shadow .15s;
-        }
-        .timeline-content:hover{
-            transform:scale(1.03);
-            box-shadow:0 8px 25px rgba(220,20,60,.25);
-            border-color:var(--accent);
-        }
-        .timeline-item:nth-child(odd) .timeline-content{margin-left:auto;margin-right:55%}
-        .timeline-item:nth-child(even) .timeline-content{margin-left:55%}
+/* Entry item */
+.timeline-item{
+  position:relative;
+  margin:50px 0;
+  opacity:0;
+  transform:translateY(30px);
+  animation:fadeInUp .8s ease forwards;
+}
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
 
-        .timeline-date{
-            font-size:1rem;
-            color:var(--accent);
-            font-weight:bold;
-            margin-bottom:8px;
-            text-transform:uppercase;
-        }
-        .timeline-title{
-            font-size:1.3rem;
-            margin-bottom:10px;
-            color:var(--text);
-        }
-        .timeline-description{
-            font-size:1rem;
-            color:var(--sub);
-        }
-        .timeline-details{
-            display:none;
-            margin-top:15px;
-            padding-top:15px;
-            border-top:1px solid var(--border);
-            font-size:.95em;
-            color:var(--sub);
-            line-height:1.6;
-        }
-        .timeline-details.active{display:block}
+/* The record card - looks like a page from a ledger */
+.timeline-content{
+  width:44%;
+  padding:24px 28px;
+  background:linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(230,213,172,0.3) 100%);
+  border:2px solid var(--burgundy);
+  cursor:pointer;
+  transition:all 0.3s ease;
+  position:relative;
+  box-shadow:
+    2px 2px 0 var(--shadow),
+    inset 0 0 20px rgba(139,69,19,0.05);
+}
 
-        /* small screens */
-        @media(max-width:768px){
-            .timeline::before{left:20px}
-            .timeline-content{
-                width:calc(100% - 60px);
-                margin-left:60px!important;
-                margin-right:0!important;
-            }
-            .timeline-dot{left:20px}
-            h1{font-size:1.8rem}
-        }
-    </style>
+/* Page curl effect */
+.timeline-content::before{
+  content:"";
+  position:absolute;
+  bottom:0;
+  right:0;
+  width:24px;
+  height:24px;
+  background:linear-gradient(135deg, transparent 50%, rgba(139,69,19,0.15) 50%);
+  border-bottom:2px solid var(--burgundy);
+  border-right:2px solid var(--burgundy);
+}
+
+/* Alternating sides like an open book */
+.timeline-item:nth-child(odd) .timeline-content{
+  margin-left:auto;
+  margin-right:56%;
+  text-align:right;
+}
+.timeline-item:nth-child(even) .timeline-content{
+  margin-left:56%;
+  text-align:left;
+}
+
+/* Hover: the page lifts */
+.timeline-content:hover{
+  transform:scale(1.02) translateY(-2px);
+  box-shadow:
+    4px 6px 20px var(--shadow),
+    inset 0 0 20px rgba(139,69,19,0.08);
+  border-color:var(--gold);
+}
+
+/* Date - styled as a chronicle entry date */
+.timeline-date{
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  color:var(--burgundy);
+  font-weight:700;
+  margin-bottom:10px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  border-bottom:1px solid var(--gold);
+  padding-bottom:6px;
+  display:inline-block;
+}
+.timeline-item:nth-child(odd) .timeline-date{
+  margin-left:auto;
+  display:block;
+  text-align:right;
+}
+
+/* Title with drop-cap feel */
+.timeline-title{
+  font-family:var(--font-cinzel);
+  font-size:1.25rem;
+  margin-bottom:12px;
+  color:var(--ink);
+  font-weight:600;
+  letter-spacing:0.5px;
+}
+
+/* Description */
+.timeline-description{
+  font-size:1.05rem;
+  color:var(--ink-light);
+  font-style:italic;
+  line-height:1.5;
+}
+
+/* Hidden details - styled as a folded letter unfolding */
+.timeline-details{
+  display:none;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:2px dashed var(--burgundy);
+  font-size:1rem;
+  color:var(--ink-light);
+  line-height:1.7;
+  position:relative;
+}
+.timeline-details.active{
+  display:block;
+  animation:unfold 0.4s ease;
+}
+@keyframes unfold{
+  from{opacity:0;transform:translateY(-5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* "Unfold" indicator */
+.timeline-content::after{
+  content:"▼ Unfold Record";
+  display:block;
+  margin-top:12px;
+  font-family:var(--font-cinzel);
+  font-size:0.7rem;
+  color:var(--gold);
+  letter-spacing:1px;
+  text-transform:uppercase;
+  opacity:0.7;
+}
+.timeline-details.active + ::after,
+.timeline-content:has(.timeline-details.active)::after{
+  content:"▲ Fold Record";
+}
+
+/* Footer */
+.chronicle-footer{
+  text-align:center;
+  padding:2rem;
+  margin:2rem 40px 40px;
+  border-top:3px double var(--burgundy);
+  color:var(--ink-light);
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  letter-spacing:1px;
+  position:relative;
+  z-index:3;
+}
+
+/* Responsive - single scroll for mobile */
+@media(max-width:768px){
+  .chronicle-header h1{font-size:2.2rem;}
+  .timeline::before{left:24px}
+  .timeline-content{
+    width:calc(100% - 70px);
+    margin-left:70px!important;
+    margin-right:0!important;
+    text-align:left!important;
+  }
+  .timeline-knot{left:24px}
+  .timeline-item:nth-child(odd) .timeline-date{
+    text-align:left;
+    margin-left:0;
+  }
+  .corner{width:60px;height:60px;}
+  .page-frame{inset:10px;}
+  .chronicle-footer{margin:30px 20px 30px;}
+}
+</style>
 </head>
 <body>
 
-    <div class="timeline-container">
-        <h1>History of Valoria</h1>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+<div class="page-frame"></div>
 
-        <!-- IMPERIAL ERA -->
-        <div class="era-marker"><h2>Imperial Era</h2></div>
+<div class="chronicle-container">
+  <div class="chronicle-header">
+    <h1>Chronicle of Valoria</h1>
+    <span class="subtitle">A True Record of the Realm</span>
+    <div class="divider">❦ ❦ ❦</div>
+  </div>
 
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content" onclick="toggleDetails(this)">
-                    <div class="timeline-date">The Coronation</div>
-                    <div class="timeline-title">Emperor Adam</div>
-                    <div class="timeline-description">
-                        On 12 December 2024 Adam became king and joined the NCN alliance.
-                    </div>
-                    <div class="timeline-details">
-                        The old ruler Beeba left. Adam accepted the crown. Valoria became an autonomous country inside the NCN.
-                    </div>
-                </div>
-            </div>
+  <!-- IMPERIAL ERA -->
+  <div class="era-marker"><h2>Imperial Era</h2></div>
 
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content" onclick="toggleDetails(this)">
-                    <div class="timeline-date">The Dictatorship</div>
-                    <div class="timeline-title">Strong Rule</div>
-                    <div class="timeline-description">
-                        Communism was banned. The state police (VIS) watched every citizen.
-                    </div>
-                    <div class="timeline-details">
-                        People could not speak against the king. Crime fell to zero. Citizens greeted each other with “Sieg Valoria.”
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content" onclick="toggleDetails(this)">
-                    <div class="timeline-date">The Innovation</div>
-                    <div class="timeline-title">Springer-Stiefel Boots</div>
-                    <div class="timeline-description">
-                        A police officer painted his netherite boots and gave them to the king as a joke.
-                    </div>
-                    <div class="timeline-details">
-                        The boots became popular. Miners and soldiers wore them. The name “Springer-Stiefel” means “jump-boot” and became a national symbol.
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content" onclick="toggleDetails(this)">
-                    <div class="timeline-date">The Militarization</div>
-                    <div class="timeline-title">Every Citizen a Soldier</div>
-                    <div class="timeline-description">
-                        The state gave armour and weapons to all adults.
-                    </div>
-                    <div class="timeline-details">
-                        There was no regular army. If enemies came, every man and woman would fight. The plan was called the “Rüstungs-Phase.”
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content" onclick="toggleDetails(this)">
-                    <div class="timeline-date">The Betrayal</div>
-                    <div class="timeline-title">Leaving the NCN</div>
-                    <div class="timeline-description">
-                        Valoria sold land and wine to the Astari for a lot of money.
-                    </div>
-                    <div class="timeline-details">
-                        Adam thought the NCN was weak. Dwayne of the Astari paid over 10 million and became Valoria’s main investor. A new flag and the Valorian Franc currency were made.
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content" onclick="toggleDetails(this)">
-                    <div class="timeline-date">The Unification</div>
-                    <div class="timeline-title">World Joins the UUR</div>
-                    <div class="timeline-description">
-                        A big war ended when the whole world united under one government.
-                    </div>
-                    <div class="timeline-details">
-                        Valoria was attacked but survived. The VIS became the NDI. Adam won the 15th UUR election. Valoria kept its own laws and started free elections at home.
-                    </div>
-                </div>
-            </div>
-
-            <div class="timeline-item">
-                <div class="timeline-dot"></div>
-                <div class="timeline-content" onclick="toggleDetails(this)">
-                    <div class="timeline-date">The Reconciliation</div>
-                    <div class="timeline-title">Peace with Elytheria</div>
-                    <div class="timeline-description">
-                        Old hate ended when Dwayne became king of Elytheria.
-                    </div>
-                    <div class="timeline-details">
-                        Elytheria had insulted Valoria for years. When friend Dwayne won the Elytherian vote, both lands agreed to stop fighting.
-                    </div>
-                </div>
-            </div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-knot"></div>
+      <div class="timeline-content" onclick="toggleDetails(this)">
+        <div class="timeline-date">The Coronation</div>
+        <div class="timeline-title">Emperor Adam</div>
+        <div class="timeline-description">
+          On 12 December 2024 Adam became king and joined the NCN alliance.
         </div>
+        <div class="timeline-details">
+          The old ruler Beeba left. Adam accepted the crown. Valoria became an autonomous country inside the NCN.
+        </div>
+      </div>
     </div>
 
-    <script>
-        function toggleDetails(box){
-            const details = box.querySelector('.timeline-details');
-            details.classList.toggle('active');
-        }
+    <div class="timeline-item">
+      <div class="timeline-knot"></div>
+      <div class="timeline-content" onclick="toggleDetails(this)">
+        <div class="timeline-date">The Dictatorship</div>
+        <div class="timeline-title">Strong Rule</div>
+        <div class="timeline-description">
+          Communism was banned. The state police (VIS) watched every citizen.
+        </div>
+        <div class="timeline-details">
+          People could not speak against the king. Crime fell to zero. Citizens greeted each other with "Sieg Valoria."
+        </div>
+      </div>
+    </div>
 
-        // simple scroll animation
-        const obs = new IntersectionObserver((entries)=>{
-            entries.forEach(en=>{
-                if(en.isIntersecting) en.target.style.animationPlayState='running';
-            });
-        },{threshold:.1});
+    <div class="timeline-item">
+      <div class="timeline-knot"></div>
+      <div class="timeline-content" onclick="toggleDetails(this)">
+        <div class="timeline-date">The Innovation</div>
+        <div class="timeline-title">Springer-Stiefel Boots</div>
+        <div class="timeline-description">
+          A police officer painted his netherite boots and gave them to the king as a joke.
+        </div>
+        <div class="timeline-details">
+          The boots became popular. Miners and soldiers wore them. The name "Springer-Stiefel" means "jump-boot" and became a national symbol.
+        </div>
+      </div>
+    </div>
 
-        document.querySelectorAll('.timeline-item').forEach(it=>obs.observe(it));
-    </script>
+    <div class="timeline-item">
+      <div class="timeline-knot"></div>
+      <div class="timeline-content" onclick="toggleDetails(this)">
+        <div class="timeline-date">The Militarization</div>
+        <div class="timeline-title">Every Citizen a Soldier</div>
+        <div class="timeline-description">
+          The state gave armour and weapons to all adults.
+        </div>
+        <div class="timeline-details">
+          There was no regular army. If enemies came, every man and woman would fight. The plan was called the "Rüstungs-Phase."
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-knot"></div>
+      <div class="timeline-content" onclick="toggleDetails(this)">
+        <div class="timeline-date">The Betrayal</div>
+        <div class="timeline-title">Leaving the NCN</div>
+        <div class="timeline-description">
+          Valoria sold land and wine to the Astari for a lot of money.
+        </div>
+        <div class="timeline-details">
+          Adam thought the NCN was weak. Dwayne of the Astari paid over 10 million and became Valoria's main investor. A new flag and the Valorian Franc currency were made.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-knot"></div>
+      <div class="timeline-content" onclick="toggleDetails(this)">
+        <div class="timeline-date">The Unification</div>
+        <div class="timeline-title">World Joins the UUR</div>
+        <div class="timeline-description">
+          A big war ended when the whole world united under one government.
+        </div>
+        <div class="timeline-details">
+          Valoria was attacked but survived. The VIS became the NDI. Adam won the 15th UUR election. Valoria kept its own laws and started free elections at home.
+        </div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-knot"></div>
+      <div class="timeline-content" onclick="toggleDetails(this)">
+        <div class="timeline-date">The Reconciliation</div>
+        <div class="timeline-title">Peace with Elytheria</div>
+        <div class="timeline-description">
+          Old hate ended when Dwayne became king of Elytheria.
+        </div>
+        <div class="timeline-details">
+          Elytheria had insulted Valoria for years. When friend Dwayne won the Elytherian vote, both lands agreed to stop fighting.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="chronicle-footer">Recorded by the Royal Scribe | Kingdom of Valoria</div>
+
+<script>
+function toggleDetails(box){
+  const details = box.querySelector('.timeline-details');
+  details.classList.toggle('active');
+}
+
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting) en.target.style.animationPlayState='running';
+  });
+},{threshold:.1});
+
+document.querySelectorAll('.timeline-item').forEach(it=>obs.observe(it));
+</script>
 
 </body>
 </html>
