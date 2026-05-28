@@ -1,179 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>PDF Newspaper Archive</title>
-  <style>
-
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative&display=swap');
-
+<meta charset="UTF-8">
+<title>The Valorian Gazette — Archive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
 :root{
-
-  --bg:#0c0b08;                 
-  --card:#14110e;              
-  --border:#4a3829;             
-  --accent:#c03;               
-  --text:#e8dfc8;               
-  --sub:#8a7d69;               
-
- 
-  --gap:1.2rem;
-  font-family:"Cinzel", "Palatino Linotype", "Book Antiqua", Palatino, serif;
-  font-weight:400;
-  letter-spacing:.4px;
+  --parchment:#e6d5ac;
+  --parchment-dark:#d4c194;
+  --parchment-worn:#c9b896;
+  --ink:#1a0f0a;
+  --ink-light:#3d2b1f;
+  --burgundy:#6b0f1a;
+  --burgundy-dark:#4a0a12;
+  --gold:#b8860b;
+  --gold-light:#daa520;
+  --wood:#3e2723;
+  --wood-dark:#281815;
+  --wood-light:#5d4037;
+  --shadow:rgba(0,0,0,0.5);
+  
+  --font-gothic:'UnifrakturMaguntia', cursive;
+  --font-cinzel:'Cinzel', serif;
+  --font-body:'EB Garamond', serif;
 }
 
+*{box-sizing:border-box;margin:0;padding:0}
 
+html{background:var(--wood-dark)}
+
+/* Printing house / shop wall background */
 body{
-  margin:0;
-  background:var(--bg);
-  background-image:
-    radial-gradient(circle at 25% 25%, #1a1612 1px, transparent 1px),
-    radial-gradient(circle at 75% 75%, #1a1612 1px, transparent 1px);
-  background-size:4px 4px;
-  color:var(--text);
+  font-family:var(--font-body);
+  color:var(--ink);
   min-height:100vh;
   display:flex;
   flex-direction:column;
-}
-a{color:var(--accent);text-decoration:none}
-
-
-header,footer{
-  background:var(--card);
-  border-bottom:2px solid var(--accent);
-  box-shadow:0 2px 6px #0006;
-}
-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem}
-header h1{margin:0;font-size:1.8rem;font-family:"Cinzel Decorative",serif;letter-spacing:2px;text-shadow:1px 1px 2px #000}
-header span{font-weight:300;font-size:.9rem;color:var(--sub)}
-
-
-main{flex:1;padding:2rem;max-width:1100px;margin:auto;width:100%}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--gap)}
-.tile{
+  align-items:center;
   background:
-    linear-gradient(145deg, var(--card) 0%, #1a1612 100%);
-  border:1px solid var(--border);
-  border-radius:0;              
-  padding:1.5rem 1rem;
-  text-align:center;
-  transition:transform .15s,box-shadow .15s;
-  cursor:pointer;
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px),
+    linear-gradient(160deg, #2a1f1a 0%, #1a120e 50%, #0f0a08 100%);
   position:relative;
+  padding:40px 20px;
+  line-height:1.6;
 }
-.tile:hover{transform:translateY(-3px);box-shadow:0 6px 20px #000c}
-.tile .emoji{font-size:2.2rem;margin-bottom:.5rem}
-.tile h3{margin:.4rem 0 .2rem;font-size:1.1rem;font-weight:600}
-.tile p{font-size:.85rem;color:var(--sub);margin:0}
-.tile.external::after{content:"⧉";position:absolute;top:.5rem;right:.7rem;font-size:.8rem;opacity:.6}
-.badge{display:inline-block;background:var(--accent);color:#fff;padding:.15rem .35rem;border-radius:0;font-size:.65rem;margin-left:.4rem;font-family:"Cinzel",serif}
 
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(ellipse at 50% 30%, transparent 30%, rgba(0,0,0,0.5) 100%);
+  pointer-events:none;
+  z-index:0;
+}
 
-#viewer{
+/* Decorative printing press elements */
+.press-decoration{
+  position:fixed;
+  pointer-events:none;
+  z-index:1;
+  opacity:0.3;
+}
+.press-wheel{
+  top:40px;
+  right:50px;
+  width:100px;
+  height:100px;
+  border:4px solid var(--gold);
+  border-radius:50%;
+  position:relative;
+  animation:slowSpin 20s linear infinite;
+}
+.press-wheel::before,
+.press-wheel::after{
+  content:"";
+  position:absolute;
+  background:var(--gold);
+}
+.press-wheel::before{
+  top:50%;
+  left:10%;
+  width:80%;
+  height:3px;
+  transform:translateY(-50%);
+}
+.press-wheel::after{
+  left:50%;
+  top:10%;
+  width:3px;
+  height:80%;
+  transform:translateX(-50%);
+}
+@keyframes slowSpin{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+/* Main container */
+.gazette-shop{
+  position:relative;
+  z-index:2;
+  max-width:1100px;
   width:100%;
-  height:80vh;
-  border:1px solid var(--border);
-  border-radius:0;
-  background:#111;
-  margin-bottom:2rem;
-  box-shadow:0 4px 12px #0008;
 }
 
-#archive h2{
-  margin-bottom:1rem;
-  font-size:1.4rem;
-  border-bottom:1px solid var(--border);
-  padding-bottom:.5rem;
-  font-family:"Cinzel Decorative",serif;
-  letter-spacing:1px;
+/* Shop sign header */
+.shop-header{
+  text-align:center;
+  margin-bottom:40px;
 }
-.archive-item{
+.shop-header h1{
+  font-family:var(--font-gothic);
+  font-size:3rem;
+  color:var(--parchment);
+  text-shadow:3px 3px 6px rgba(0,0,0,0.6), 0 0 20px rgba(184,134,11,0.2);
+  letter-spacing:2px;
+  line-height:1.1;
+}
+.shop-header .subtitle{
+  font-family:var(--font-cinzel);
+  font-size:0.9rem;
+  color:var(--gold);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  display:block;
+  margin-top:8px;
+}
+.shop-header .divider{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
+  margin-top:12px;
+  color:var(--gold);
+  font-size:1.2rem;
+}
+.shop-header .divider::before,
+.shop-header .divider::after{
+  content:"";
+  display:block;
+  width:100px;
+  height:2px;
+  background:linear-gradient(to right, transparent, var(--gold), transparent);
+}
+
+/* Main reading stand / broadsheet display */
+.reading-stand{
+  position:relative;
+  margin-bottom:50px;
+}
+.stand-frame{
+  position:relative;
+  background:linear-gradient(145deg, var(--wood) 0%, var(--wood-dark) 100%);
+  padding:20px;
+  border:4px solid var(--gold);
+  border-radius:4px;
+  box-shadow:
+    0 0 0 2px var(--burgundy),
+    0 20px 60px rgba(0,0,0,0.6),
+    inset 0 2px 4px rgba(255,255,255,0.05);
+}
+/* Brass corner ornaments */
+.stand-frame::before,
+.stand-frame::after{
+  content:"◆";
+  position:absolute;
+  color:var(--gold);
+  font-size:1.5rem;
+  z-index:3;
+}
+.stand-frame::before{top:8px;left:12px;}
+.stand-frame::after{top:8px;right:12px;}
+
+/* The viewer iframe wrapper */
+.viewer-wrapper{
+  position:relative;
+  background:#1a1a1a;
+  border:2px solid var(--burgundy);
+  border-radius:2px;
+  overflow:hidden;
+}
+.viewer-wrapper iframe{
+  width:100%;
+  height:75vh;
+  border:none;
+  display:block;
+  background:#fff;
+}
+/* Parchment edge overlay on iframe to look like paper */
+.viewer-wrapper::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border:12px solid var(--parchment);
+  border-image:linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 50%, var(--parchment-worn) 100%) 1;
+  pointer-events:none;
+  z-index:2;
+  box-shadow:inset 0 0 20px rgba(139,69,19,0.2);
+}
+
+/* "Fresh from the press" ribbon */
+.fresh-ribbon{
+  position:absolute;
+  top:-14px;
+  left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(145deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+  color:var(--parchment);
+  font-family:var(--font-cinzel);
+  font-size:0.75rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:8px 30px;
+  border:2px solid var(--gold);
+  z-index:4;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  white-space:nowrap;
+}
+.fresh-ribbon::before,
+.fresh-ribbon::after{
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  width:0;
+  height:0;
+  border-top:10px solid var(--burgundy-dark);
+}
+.fresh-ribbon::before{
+  left:0;
+  border-left:10px solid transparent;
+}
+.fresh-ribbon::after{
+  right:0;
+  border-right:10px solid transparent;
+}
+
+/* Archive section — The Scroll Rack */
+.archive-section{
+  margin-top:40px;
+}
+.archive-header{
+  text-align:center;
+  margin-bottom:30px;
+}
+.archive-header h2{
+  font-family:var(--font-gothic);
+  font-size:2rem;
+  color:var(--parchment);
+  text-shadow:2px 2px 4px rgba(0,0,0,0.5);
+}
+.archive-header p{
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  color:var(--gold);
+  letter-spacing:2px;
+  margin-top:6px;
+}
+
+/* Scroll rack grid */
+.scroll-rack{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:20px;
+}
+
+/* Each archive item as a rolled broadsheet */
+.broadsheet{
+  position:relative;
+  background:linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  border:2px solid var(--burgundy);
+  padding:20px 20px 20px 30px;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.broadsheet::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:8px;
+  background:linear-gradient(to bottom, var(--burgundy), var(--gold), var(--burgundy));
+  border-right:1px solid var(--gold);
+}
+.broadsheet:hover{
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 8px 25px rgba(0,0,0,0.4);
+  border-color:var(--gold);
+}
+
+/* Date stamp */
+.broadsheet-date{
+  font-family:var(--font-cinzel);
+  font-size:1.1rem;
+  color:var(--burgundy-dark);
+  font-weight:700;
+  letter-spacing:1px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.broadsheet-date::before{
+  content:"📜";
+  font-size:1.3rem;
+  filter:grayscale(0.3);
+}
+
+/* Edition label */
+.broadsheet-label{
+  font-family:var(--font-body);
+  font-size:0.95rem;
+  color:var(--ink-light);
+  font-style:italic;
+  padding-left:4px;
+  border-left:2px solid var(--gold);
+  margin-left:4px;
+}
+
+/* Actions row */
+.broadsheet-actions{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:0;
-  padding:.8rem 1rem;
-  margin-bottom:.7rem;
-  transition:background .15s;
+  margin-top:8px;
+  padding-top:12px;
+  border-top:1px dashed var(--burgundy);
 }
-.archive-item:hover{background:#1a1612}
-.archive-item span{font-size:.9rem;color:var(--sub)}
-.archive-item a{font-size:.85rem;font-weight:600}
 
+/* Wax seal badge for newest */
+.wax-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--burgundy);
+  color:var(--parchment);
+  font-family:var(--font-cinzel);
+  font-size:0.65rem;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:4px 10px;
+  border:2px solid var(--gold);
+  box-shadow:0 2px 6px rgba(0,0,0,0.3);
+  transform:rotate(-2deg);
+}
+.wax-badge::before{
+  content:"✦";
+  color:var(--gold);
+  font-size:0.8rem;
+}
 
-footer{
+/* Download button */
+.take-copy{
+  font-family:var(--font-cinzel);
+  font-size:0.8rem;
+  color:var(--burgundy);
+  text-decoration:none;
+  padding:6px 14px;
+  border:2px solid var(--burgundy);
+  background:rgba(107,15,26,0.08);
+  transition:all 0.2s;
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+.take-copy:hover{
+  background:var(--burgundy);
+  color:var(--parchment);
+  border-color:var(--gold);
+}
+
+/* Footer */
+.gazette-footer{
   text-align:center;
-  padding:1.2rem;
-  font-size:.8rem;
-  color:var(--sub);
-  border-bottom:none;
-  border-top:2px solid var(--accent);
+  padding:2rem;
+  margin-top:40px;
+  color:rgba(230,213,172,0.5);
+  font-family:var(--font-cinzel);
+  font-size:0.85rem;
+  letter-spacing:1px;
+  position:relative;
+  z-index:2;
 }
-  </style>
+
+/* Responsive */
+@media(max-width:768px){
+  .shop-header h1{font-size:2rem;}
+  .viewer-wrapper iframe{height:50vh;}
+  .scroll-rack{grid-template-columns:1fr;}
+  .press-wheel{display:none;}
+  .stand-frame{padding:12px;}
+  .fresh-ribbon{font-size:0.65rem;padding:6px 20px;}
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>PDF Newspaper Archive</h1>
-    <span>Newest edition always on top</span>
-  </header>
 
-  <main>
-    
-    <iframe id="viewer" src=""></iframe>
+<!-- Decorative printing wheel -->
+<div class="press-decoration press-wheel"></div>
 
-    
-    <section id="archive">
-      <h2>Older Editions</h2>
-      <div id="list"></div>
-    </section>
-  </main>
-
-  <footer>
-    © <span id="year"></span> – Static archive, no uploads via web.
-  </footer>
-
-  <script>
-   
-    const newspapers = [
-     //Edit Newspapers here:
-      { date: "2025-11-08", file: "Valorian_News_08.11.25.pdf" }
-    ];
-
-   
-    function render() {
-      const viewer = document.getElementById('viewer');
-      const list   = document.getElementById('list');
-
-    
-      const sorted = [...newspapers].sort((a,b) => new Date(b.date) - new Date(a.date));
-
+<div class="gazette-shop">
   
-      if (sorted.length) viewer.src = sorted[0].file;
+  <div class="shop-header">
+    <h1>The Valorian Gazette</h1>
+    <span class="subtitle">Royal Printing House Archive</span>
+    <div class="divider">❦ ❦ ❦</div>
+  </div>
 
-   
-      list.innerHTML = '';
-      sorted.forEach((paper, idx) => {
-        const div = document.createElement('div');
-        div.className = 'archive-item';
-        div.innerHTML = `
-          <div>
-            <strong>${paper.date}</strong>
-            <span>${idx === 0 ? '<span class="badge">NEWEST</span>' : ''}</span>
-          </div>
-          <a href="${paper.file}" download>Download PDF</a>
-        `;
-        list.appendChild(div);
-      });
-    }
+  <!-- Main reading stand with current paper -->
+  <div class="reading-stand">
+    <div class="stand-frame">
+      <div class="fresh-ribbon">Fresh from the Press</div>
+      <div class="viewer-wrapper">
+        <iframe id="viewer" src=""></iframe>
+      </div>
+    </div>
+  </div>
 
-   
-    document.getElementById('year').textContent = new Date().getFullYear();
+  <!-- Archive scroll rack -->
+  <div class="archive-section">
+    <div class="archive-header">
+      <h2>Previous Editions</h2>
+      <p>Stored in the Royal Archive</p>
+    </div>
+    <div class="scroll-rack" id="list"></div>
+  </div>
 
+</div>
 
-    render();
-  </script>
+<div class="gazette-footer">© <span id="year"></span> — Valorian Royal Printing House | No unauthorized reproduction</div>
+
+<script>
+const newspapers = [
+  { date: "2025-11-08", file: "Valorian_News_08.11.25.pdf" }
+];
+
+function render() {
+  const viewer = document.getElementById('viewer');
+  const list   = document.getElementById('list');
+  const sorted = [...newspapers].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  if (sorted.length) viewer.src = sorted[0].file;
+
+  list.innerHTML = '';
+  sorted.forEach((paper, idx) => {
+    const div = document.createElement('div');
+    div.className = 'broadsheet';
+    div.onclick = () => { viewer.src = paper.file; window.scrollTo({top:0,behavior:'smooth'}); };
+    div.innerHTML = `
+      <div class="broadsheet-date">${paper.date}</div>
+      <div class="broadsheet-label">Edition of the Royal Gazette</div>
+      <div class="broadsheet-actions">
+        <div>
+          ${idx === 0 ? '<span class="wax-badge">Newest</span>' : ''}
+        </div>
+        <a href="${paper.file}" download class="take-copy" onclick="event.stopPropagation()">Take Copy ↓</a>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+
+document.getElementById('year').textContent = new Date().getFullYear();
+render();
+</script>
+
 </body>
 </html>
