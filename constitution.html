@@ -2,240 +2,684 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>The Enlightened Codex | Kingdom of Valoria</title>
+<title>The Enlightened Codex | Königreich Valoria</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=UnifrakturMaguntia&family=MedievalSharp&display=swap" rel="stylesheet">
 <style>
 :root {
-  --parchment: #f4edd4;
-  --parchment-dark: #e6dcba;
-  --parchment-worn: #ded1a6;
-  --ink: #1c120c;
-  --ink-light: #4a3525;
-  --burgundy: #800020;
-  --burgundy-bright: #a31d37;
-  --gold: #996515;
-  --gold-light: #d4af37;
-  --wood-dark: #120a07;
-  
-  --font-headers: 'Cinzel', serif;
-  --font-body: 'EB Garamond', serif;
+  --parchment: #e8dcc0;
+  --parchment-light: #f0e8d0;
+  --parchment-worn: #d4c8a8;
+  --parchment-dark: #c0b490;
+  --ink: #1a0f08;
+  --ink-faded: #3d2a1a;
+  --burgundy: #6b0015;
+  --burgundy-deep: #4a000e;
+  --burgundy-bright: #8b1530;
+  --gold: #8a6d1f;
+  --gold-bright: #c9a84c;
+  --gold-pale: #d4b86a;
+  --wood-dark: #0a0502;
+  --wood: #1c1008;
+  --wood-mid: #2c1a10;
+  --iron: #2a2a2a;
+  --iron-light: #4a4a4a;
+
+  --font-headers: 'Cinzel', 'UnifrakturMaguntia', serif;
+  --font-body: 'EB Garamond', 'MedievalSharp', serif;
+  --font-gothic: 'UnifrakturMaguntia', 'Cinzel', serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
   color: var(--ink);
   min-height: 100vh;
-  background: radial-gradient(ellipse at center, #2c1a10 0%, var(--wood-dark) 100%);
-  line-height: 1.7;
+  background: 
+    radial-gradient(ellipse at 20% 0%, rgba(107,0,21,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(138,109,31,0.1) 0%, transparent 50%),
+    linear-gradient(180deg, var(--wood-dark) 0%, var(--wood) 30%, var(--wood-mid) 70%, var(--wood-dark) 100%);
+  line-height: 1.75;
   font-size: 1.15rem;
-  padding: 40px 20px;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Animated floating embers */
+.embers-container {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.ember {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: radial-gradient(circle, var(--gold-bright), transparent);
+  border-radius: 50%;
+  opacity: 0;
+  animation: floatEmber 8s infinite ease-in-out;
+}
+@keyframes floatEmber {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.3; }
+  100% { opacity: 0; transform: translateY(-10vh) scale(1.5); }
+}
+
+/* Gothic cathedral side pillars */
+.cathedral-pillar {
+  position: fixed;
+  top: 0; bottom: 0;
+  width: 60px;
+  background: linear-gradient(90deg, 
+    var(--wood-dark) 0%, 
+    var(--wood) 20%, 
+    var(--wood-mid) 50%, 
+    var(--wood) 80%, 
+    var(--wood-dark) 100%);
+  z-index: 1;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+}
+.cathedral-pillar.left { left: 0; }
+.cathedral-pillar.right { right: 0; }
+
+.cathedral-pillar::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 8px; height: 100%;
+  background: linear-gradient(180deg, 
+    var(--gold) 0%, 
+    var(--gold-bright) 10%, 
+    var(--gold) 20%, 
+    transparent 30%,
+    transparent 70%,
+    var(--gold) 80%,
+    var(--gold-bright) 90%,
+    var(--gold) 100%);
+  opacity: 0.4;
+}
+
+/* Stained glass light effect */
+.stained-glow {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background: 
+    radial-gradient(ellipse at 15% 20%, rgba(107,0,21,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 85% 30%, rgba(138,109,31,0.06) 0%, transparent 35%),
+    radial-gradient(ellipse at 50% 80%, rgba(107,0,21,0.05) 0%, transparent 50%);
 }
 
 .scroll-desk {
-  max-width: 960px;
-  margin: 40px auto;
+  max-width: 900px;
+  margin: 0 auto;
   position: relative;
+  z-index: 2;
+  padding: 40px 20px;
 }
 
+/* The main codex scroll */
 .scroll {
-  background: linear-gradient(135deg, var(--parchment) 0%, var(--parchment-dark) 100%);
-  padding: 60px 70px;
-  border-radius: 4px;
+  background: 
+    linear-gradient(135deg, var(--parchment) 0%, var(--parchment-light) 50%, var(--parchment) 100%),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4"/><feColorMatrix type="saturate" values="0"/></filter><rect width="100%25" height="100%25" filter="url(%23n)" opacity="0.03"/></svg>');
+  padding: 0;
+  border-radius: 2px;
   box-shadow: 
     0 0 0 1px var(--gold),
-    0 20px 50px rgba(0,0,0,0.6);
+    0 0 0 4px var(--burgundy-deep),
+    0 0 0 5px var(--gold),
+    0 30px 80px rgba(0,0,0,0.7),
+    inset 0 0 100px rgba(107,0,21,0.03);
   position: relative;
-  border-left: 4px solid var(--burgundy);
-  border-right: 4px solid var(--burgundy);
+  border-left: 6px solid var(--burgundy);
+  border-right: 6px solid var(--burgundy);
 }
 
+/* Illuminated corner ornaments */
+.scroll::before, .scroll::after {
+  content: "❧";
+  position: absolute;
+  font-size: 2rem;
+  color: var(--gold-bright);
+  text-shadow: 0 0 10px rgba(201,168,76,0.3);
+  z-index: 10;
+}
+.scroll::before { top: 15px; left: 15px; }
+.scroll::after { bottom: 15px; right: 15px; transform: rotate(180deg); }
+
+/* Top and bottom scroll rolls */
+.scroll-roll {
+  height: 24px;
+  background: linear-gradient(180deg, 
+    var(--wood-dark) 0%, 
+    var(--wood) 30%, 
+    var(--wood-mid) 50%, 
+    var(--wood) 70%, 
+    var(--wood-dark) 100%);
+  position: relative;
+  border-radius: 12px;
+  margin: 0 -8px;
+  box-shadow: 
+    0 4px 8px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(201,168,76,0.2);
+}
+.scroll-roll::before {
+  content: "";
+  position: absolute;
+  top: 50%; left: 10px; right: 10px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform: translateY(-50%);
+}
+
+/* Inner content padding */
+.scroll-inner {
+  padding: 50px 60px;
+}
+
+/* HEADER */
 .scroll-header {
   text-align: center;
-  margin-bottom: 50px;
-  padding-bottom: 30px;
-  border-bottom: 2px double var(--gold);
+  margin-bottom: 40px;
+  padding: 30px 20px;
+  position: relative;
+}
+
+.scroll-header::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), var(--burgundy), var(--gold-bright), transparent);
+}
+.scroll-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 10%; right: 10%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold-bright), var(--burgundy), var(--gold-bright), transparent);
+}
+
+.crown-icon {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+  display: block;
+  filter: drop-shadow(0 0 15px rgba(201,168,76,0.4));
+  animation: crownPulse 4s ease-in-out infinite;
+}
+@keyframes crownPulse {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(201,168,76,0.3)); transform: scale(1); }
+  50% { filter: drop-shadow(0 0 25px rgba(201,168,76,0.6)); transform: scale(1.05); }
 }
 
 .scroll-header h1 {
   font-family: var(--font-headers);
-  font-size: 2.8rem;
+  font-size: 2.6rem;
   color: var(--burgundy);
-  letter-spacing: 2px;
-  font-weight: 800;
+  letter-spacing: 4px;
+  font-weight: 900;
   text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  line-height: 1.2;
 }
 
 .scroll-header .subtitle {
   font-family: var(--font-headers);
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--gold);
-  letter-spacing: 5px;
+  letter-spacing: 6px;
   text-transform: uppercase;
-  margin-top: 10px;
+  margin-top: 12px;
   display: block;
+  font-weight: 700;
+}
+
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 20px 0;
+  color: var(--gold-bright);
+  font-size: 1.2rem;
+}
+.divider-ornament::before,
+.divider-ornament::after {
+  content: "";
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  max-width: 120px;
 }
 
 .badge-container {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 15px;
   margin-top: 20px;
+  flex-wrap: wrap;
 }
 
 .national-badge {
   font-family: var(--font-headers);
-  font-size: 0.75rem;
-  background: var(--burgundy);
-  color: var(--parchment);
-  padding: 4px 12px;
-  border-radius: 2px;
-  letter-spacing: 1px;
+  font-size: 0.7rem;
+  background: linear-gradient(135deg, var(--burgundy) 0%, var(--burgundy-deep) 100%);
+  color: var(--parchment-light);
+  padding: 6px 16px;
+  border-radius: 3px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid var(--gold);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+}
+.national-badge::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
+  animation: badgeShine 3s infinite;
+}
+@keyframes badgeShine {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
 }
 
+/* NAVIGATION */
 .nav-tabs {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
+  gap: 0;
   margin-bottom: 40px;
-  border-bottom: 1px solid var(--gold);
-  padding-bottom: 15px;
+  position: relative;
 }
 
 .nav-tab {
   font-family: var(--font-headers);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--burgundy);
   text-decoration: none;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-weight: 800;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  transition: color 0.2s;
+  padding: 12px 30px;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.nav-tab::before {
+  content: "⚜";
+  margin-right: 8px;
+  color: var(--gold);
+  font-size: 0.9em;
 }
 
 .nav-tab:hover {
-  color: var(--gold);
+  color: var(--gold-bright);
+  text-shadow: 0 0 10px rgba(201,168,76,0.3);
+}
+
+.nav-tab.active {
+  color: var(--burgundy-bright);
+  border-bottom: 3px solid var(--burgundy);
+}
+
+/* SECTION HEADERS */
+section {
+  margin-bottom: 50px;
 }
 
 h2 {
   font-family: var(--font-headers);
-  font-size: 1.8rem;
+  font-size: 1.7rem;
   color: var(--burgundy);
   margin: 3rem 0 1.5rem;
-  border-bottom: 1px solid var(--gold);
-  padding-bottom: 8px;
+  padding: 15px 20px;
   text-transform: uppercase;
+  letter-spacing: 3px;
+  text-align: center;
+  position: relative;
+  background: linear-gradient(90deg, transparent, rgba(107,0,21,0.05), transparent);
+  border-top: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+}
+
+h2::before, h2::after {
+  content: "✦";
+  color: var(--gold-bright);
+  margin: 0 15px;
+  font-size: 1rem;
 }
 
 h3 {
   font-family: var(--font-headers);
-  font-size: 1.3rem;
-  color: var(--ink-light);
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  color: var(--burgundy-bright);
+  margin-top: 2.5rem;
+  margin-bottom: 1.2rem;
+  padding-left: 20px;
+  border-left: 4px solid var(--gold);
+  letter-spacing: 1px;
 }
 
 h4 {
   font-family: var(--font-headers);
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--gold);
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
   text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
 }
 
 p {
-  margin-bottom: 1.2rem;
+  margin-bottom: 1.3rem;
   text-align: justify;
+  text-indent: 1.5em;
+}
+
+p:first-of-type, h2 + p, h3 + p, h4 + p, .law-card p {
+  text-indent: 0;
 }
 
 ol, ul {
-  margin-left: 2rem;
+  margin-left: 2.5rem;
   margin-bottom: 1.5rem;
 }
 
 li {
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.9rem;
   padding-left: 0.5rem;
+  position: relative;
 }
 
 li::marker {
   color: var(--burgundy);
   font-weight: bold;
+  font-family: var(--font-headers);
 }
 
+/* LAW CARDS - Illuminated manuscript style */
 .law-card {
-  background: rgba(255, 255, 255, 0.4);
-  padding: 20px;
-  margin-bottom: 1.5rem;
-  border-radius: 4px;
-  border-left: 3px solid var(--gold);
+  background: 
+    linear-gradient(135deg, rgba(232,220,192,0.6) 0%, rgba(240,232,208,0.8) 100%),
+    url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="20" height="20" fill="none" stroke="%23c0b490" stroke-width="0.5" opacity="0.3"/></svg>');
+  padding: 25px 30px;
+  margin-bottom: 1.8rem;
+  border-radius: 3px;
+  border: 2px solid var(--gold);
+  border-left: 5px solid var(--burgundy);
+  box-shadow: 
+    0 4px 15px rgba(0,0,0,0.1),
+    inset 0 0 30px rgba(201,168,76,0.03);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.law-card:hover {
+  box-shadow: 
+    0 8px 25px rgba(0,0,0,0.15),
+    inset 0 0 30px rgba(201,168,76,0.05),
+    0 0 0 1px var(--gold-bright);
+  transform: translateY(-2px);
+}
+
+.law-card::before {
+  content: "❧";
+  position: absolute;
+  top: 8px; right: 12px;
+  color: var(--gold);
+  font-size: 1.2rem;
+  opacity: 0.5;
 }
 
 .law-card h5 {
   font-family: var(--font-headers);
   font-size: 1.05rem;
   color: var(--burgundy);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  letter-spacing: 1px;
 }
 
 .punishment {
   display: block;
   font-style: italic;
   color: var(--burgundy-bright);
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
   font-weight: 600;
+  padding: 10px 15px;
+  background: rgba(107,0,21,0.05);
+  border-left: 3px solid var(--burgundy);
+  border-radius: 0 3px 3px 0;
+  font-size: 1rem;
 }
 
+/* Article seals */
 .article-seal {
   text-align: center;
   margin: 3rem 0;
-  color: var(--gold-light);
-  font-size: 1.5rem;
+  color: var(--gold-bright);
+  font-size: 2rem;
+  letter-spacing: 15px;
+  text-shadow: 0 0 15px rgba(201,168,76,0.2);
+  position: relative;
+}
+.article-seal::before,
+.article-seal::after {
+  content: "";
+  position: absolute;
+  top: 50%; width: 30%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.article-seal::before { left: 5%; }
+.article-seal::after { right: 5%; }
+
+/* Wax seal */
+.wax-seal-container {
+  text-align: center;
+  margin: 4rem auto 2rem;
+  position: relative;
 }
 
 .wax-seal {
-  width: 90px;
-  height: 90px;
-  background: radial-gradient(circle at 35% 35%, var(--burgundy-bright), var(--burgundy));
+  width: 110px;
+  height: 110px;
+  background: radial-gradient(circle at 35% 35%, var(--burgundy-bright), var(--burgundy), var(--burgundy-deep));
   border-radius: 50%;
-  margin: 4rem auto 2rem;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset -4px -4px 10px rgba(0,0,0,0.4);
+  box-shadow: 
+    0 15px 35px rgba(0,0,0,0.5), 
+    inset -6px -6px 15px rgba(0,0,0,0.4),
+    inset 3px 3px 10px rgba(139,21,48,0.3);
+  position: relative;
+  animation: sealFloat 6s ease-in-out infinite;
+}
+
+@keyframes sealFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-5px) rotate(2deg); }
+}
+
+.wax-seal::before {
+  content: "";
+  position: absolute;
+  width: 90%; height: 90%;
+  border: 2px solid rgba(201,168,76,0.3);
+  border-radius: 50%;
 }
 
 .wax-seal::after {
   content: "👑";
-  font-size: 2.2rem;
+  font-size: 2.8rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
 }
 
+.wax-seal-ribbon {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px; height: 200px;
+  pointer-events: none;
+}
+.wax-seal-ribbon::before,
+.wax-seal-ribbon::after {
+  content: "";
+  position: absolute;
+  width: 80px; height: 20px;
+  background: linear-gradient(90deg, var(--burgundy), var(--burgundy-bright), var(--burgundy));
+  top: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.wax-seal-ribbon::before { 
+  left: -30px; 
+  transform: translateY(-50%) rotate(-30deg);
+  transform-origin: right center;
+}
+.wax-seal-ribbon::after { 
+  right: -30px; 
+  transform: translateY(-50%) rotate(30deg);
+  transform-origin: left center;
+}
+
+/* Section divider lines */
+.section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 3rem 0;
+  gap: 20px;
+}
+.section-divider .line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  max-width: 200px;
+}
+.section-divider .diamond {
+  color: var(--burgundy);
+  font-size: 1.5rem;
+}
+
+/* Footer */
 .scroll-footer {
   text-align: center;
-  color: var(--parchment-dark);
+  color: var(--parchment-worn);
   font-family: var(--font-headers);
-  font-size: 0.85rem;
-  letter-spacing: 2px;
-  margin-top: 40px;
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  margin-top: 50px;
+  padding: 30px 20px;
+  position: relative;
 }
 
-@media(max-width:768px){
-  .scroll { padding: 40px 20px; }
-  .scroll-header h1 { font-size: 1.8rem; }
+.scroll-footer::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 20%; right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* Scroll to top button */
+.scroll-top {
+  position: fixed;
+  bottom: 30px;
+  right: 80px;
+  width: 50px; height: 50px;
+  background: linear-gradient(135deg, var(--burgundy), var(--burgundy-deep));
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transition: all 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.scroll-top.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+.scroll-top:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5), 0 0 20px rgba(201,168,76,0.2);
+}
+.scroll-top::after {
+  content: "▲";
+  color: var(--gold-bright);
+  font-size: 1.2rem;
+}
+
+/* RESPONSIVE */
+@media(max-width: 768px) {
+  .cathedral-pillar { display: none; }
+  .scroll-inner { padding: 30px 20px; }
+  .scroll-header h1 { font-size: 1.6rem; letter-spacing: 2px; }
+  .scroll-header .subtitle { font-size: 0.75rem; letter-spacing: 3px; }
+  h2 { font-size: 1.3rem; }
+  h3 { font-size: 1.1rem; }
+  .law-card { padding: 18px 20px; }
+  .nav-tab { padding: 10px 15px; font-size: 0.75rem; }
+  .scroll-top { right: 20px; }
+}
+
+@media(max-width: 480px) {
+  .scroll-header h1 { font-size: 1.3rem; }
+  .crown-icon { font-size: 2.5rem; }
+  .wax-seal { width: 80px; height: 80px; }
+  .wax-seal::after { font-size: 2rem; }
+}
+
+/* Print styles */
+@media print {
+  body { background: white; }
+  .cathedral-pillar, .embers-container, .stained-glow, .scroll-top { display: none; }
+  .scroll { box-shadow: none; border: 2px solid black; }
 }
 </style>
+<base target="_blank">
 </head>
 <body>
 
+<!-- Floating embers -->
+<div class="embers-container" id="embers"></div>
+
+<!-- Stained glass glow overlay -->
+<div class="stained-glow"></div>
+
+<!-- Gothic cathedral pillars -->
+<div class="cathedral-pillar left"></div>
+<div class="cathedral-pillar right"></div>
+
 <div class="scroll-desk">
   <div class="scroll">
-    
+    <div class="scroll-roll"></div>
+
+    <div class="scroll-inner">
+
     <div class="scroll-header">
+      <span class="crown-icon">👑</span>
       <h1>Kingdom of Valoria</h1>
       <span class="subtitle">Enlightened Constitution & Sovereign Law Codex</span>
+      <div class="divider-ornament">⚜ ⚖ ⚜</div>
       <div class="badge-container">
         <span class="national-badge">Capital Prosperity</span>
         <span class="national-badge">National Order</span>
@@ -252,108 +696,108 @@ li::marker {
       <h2>Constitution of the Kingdom of Valoria</h2>
 
       <h3>Preamble</h3>
-      <p>We, the people of Valoria, proudly united under our Crown and operating as a sovereign realm within the Unite Union of Republics (UUR), establish this supreme framework. We dedicate our state to the generation of immense commercial wealth, absolute fiscal stability, fierce national pride, and the robust protection of our industrious citizenry. Valoria stands as a fortress of capitalist opportunity and a neutral, trade-focused intermediary, ensuring that corporate innovation and citizen well-being thrive hand-in-hand[cite: 195].</p>
+      <p>We, the people of Valoria, proudly united under our Crown and operating as a sovereign realm within the Unite Union of Republics (UUR), establish this supreme framework. We dedicate our state to the generation of immense commercial wealth, absolute fiscal stability, fierce national pride, and the robust protection of our industrious citizenry. Valoria stands as a fortress of capitalist opportunity and a neutral, trade-focused intermediary, ensuring that corporate innovation and citizen well-being thrive hand-in-hand.</p>
 
       <div class="article-seal">❦ ⚖ ❦</div>
 
       <h3>Article I — Realm Sovereignty and the UUR</h3>
       <ol>
-        <li>Valoria retains complete, non-negotiable domestic autonomy over its internal laws, judicial structures, provincial administrations, and economic policies[cite: 196, 201].</li>
-        <li>As a trade-focused middle power, Valoria actively cultivates global bilateral free trade agreements and wealthy mercantile alliances (such as our pact with the Astari), provided they do not conflict with active UUR treaties[cite: 197, 200].</li>
-        <li>In matters of collective defense, Valoria honors its exterior commitments to the UUR [cite: 198]; however, no Valorian citizen-soldiers shall be deployed to foreign offensive operations without an absolute, explicit majority vote of the Valorian Regional Council (VRC) to ensure national blood is never spilled for external conflicts[cite: 199].</li>
-        <li>Valoria maintains the absolute right to negotiate economic treaties independently to build capital and commercial depth[cite: 200].</li>
+        <li>Valoria retains complete, non-negotiable domestic autonomy over its internal laws, judicial structures, provincial administrations, and economic policies.</li>
+        <li>As a trade-focused middle power, Valoria actively cultivates global bilateral free trade agreements and wealthy mercantile alliances (such as our pact with the Astari), provided they do not conflict with active UUR treaties.</li>
+        <li>In matters of collective defense, Valoria honors its exterior commitments to the UUR; however, no Valorian citizen-soldiers shall be deployed to foreign offensive operations without an absolute, explicit majority vote of the Valorian Regional Council (VRC) to ensure national blood is never spilled for external conflicts.</li>
+        <li>Valoria maintains the absolute right to negotiate economic treaties independently to build capital and commercial depth.</li>
       </ol>
 
       <h3>Article II — Executive Governance & Power-Sharing</h3>
       <ol>
-        <li>Valoria retains broad autonomy over domestic affairs including law, economy, and local administration[cite: 201]. Executive authority is shared proportionally to ensure elite consensus and decisive command via the Valorian Regional Council (VRC)[cite: 202]:
+        <li>Valoria retains broad autonomy over domestic affairs including law, economy, and local administration. Executive authority is shared proportionally to ensure elite consensus and decisive command via the Valorian Regional Council (VRC):
           <ul>
-            <li><strong>The King:</strong> Holds 50% of Council influence, serving as the immutable Head of State and supreme guardian of Valorian cultural heritage[cite: 202].</li>
-            <li><strong>The Lord of Valoria:</strong> A fixed lordship holding 25% influence in the VRC[cite: 202].</li>
-            <li><strong>The Senior Lord of Valoria:</strong> A fixed lordship holding 25% influence in the VRC[cite: 202].</li>
+            <li><strong>The King:</strong> Holds 50% of Council influence, serving as the immutable Head of State and supreme guardian of Valorian cultural heritage.</li>
+            <li><strong>The Lord of Valoria:</strong> A fixed lordship holding 25% influence in the VRC.</li>
+            <li><strong>The Senior Lord of Valoria:</strong> A fixed lordship holding 25% influence in the VRC.</li>
           </ul>
         </li>
-        <li>The VRC acts as the legislative body and drafts national laws[cite: 205, 207]. To ensure governance remains streamlined, it shall consist of these three core constitutional offices unless expanded by formal amendment[cite: 206].</li>
-        <li>To guarantee fairness for all economic tiers, all drafted corporate laws, maritime codes, and tax rates must be published transparently 14 days prior to any council vote, preventing backroom oligarchic manipulation[cite: 207].</li>
-        <li><strong>True Democratic Pathway:</strong> Citizens retain the sacred right to petition and launch initiatives[cite: 208]. If an initiative gains signatures from 10% of the active citizenry, it triggers automatic consideration [cite: 209], and a binding public referendum (popular vote) **must** be opened to the nation within 90 days, breaking any elite political gatekeeping[cite: 209].</li>
-        <li><strong>The Free City of Alter Hafen:</strong> Alter Hafen enjoys recognized, limited autonomy owing to its multi-national founding[cite: 211]. It is governed locally by a fixed Lord (Lord of Alter Hafen) with powers delegated in municipal statute[cite: 212]. Alter Hafen operates under Valorian sovereignty but retains local rule over municipal affairs and trade administration[cite: 213].</li>
+        <li>The VRC acts as the legislative body and drafts national laws. To ensure governance remains streamlined, it shall consist of these three core constitutional offices unless expanded by formal amendment.</li>
+        <li>To guarantee fairness for all economic tiers, all drafted corporate laws, maritime codes, and tax rates must be published transparently 14 days prior to any council vote, preventing backroom oligarchic manipulation.</li>
+        <li><strong>True Democratic Pathway:</strong> Citizens retain the sacred right to petition and launch initiatives. If an initiative gains signatures from 10% of the active citizenry, it triggers automatic consideration, and a binding public referendum (popular vote) <strong>must</strong> be opened to the nation within 90 days, breaking any elite political gatekeeping.</li>
+        <li><strong>The Free City of Alter Hafen:</strong> Alter Hafen enjoys recognized, limited autonomy owing to its multi-national founding. It is governed locally by a fixed Lord (Lord of Alter Hafen) with powers delegated in municipal statute. Alter Hafen operates under Valorian sovereignty but retains local rule over municipal affairs and trade administration.</li>
       </ol>
 
       <h3>Article II.X — Lordships for New Cities</h3>
       <ol>
-        <li>When a new city is officially recognized by the King, a lordship may be established to oversee local administration, projects, and initiatives[cite: 214].</li>
-        <li>Citizens of the Kingdom of Valoria shall participate in a one-time vote between the three current members of the Valorian Regional Council (VRC), to determine which official shall serve as Lord of that specific city[cite: 215].</li>
-        <li>The elected Lord shall hold office over the city until reassignment, and shall be responsible for managing local administrative matters, reporting directly to the King[cite: 216].</li>
-        <li>Lordship does not confer additional VRC influence, alter the fixed VRC shares, or affect the constitutional authority of the elected official at the national level[cite: 217].</li>
-        <li>The VRC and King may enact regulations detailing the procedural, statutory, and administrative aspects of these local lordships[cite: 218].</li>
+        <li>When a new city is officially recognized by the King, a lordship may be established to oversee local administration, projects, and initiatives.</li>
+        <li>Citizens of the Kingdom of Valoria shall participate in a one-time vote between the three current members of the Valorian Regional Council (VRC), to determine which official shall serve as Lord of that specific city.</li>
+        <li>The elected Lord shall hold office over the city until reassignment, and shall be responsible for managing local administrative matters, reporting directly to the King.</li>
+        <li>Lordship does not confer additional VRC influence, alter the fixed VRC shares, or affect the constitutional authority of the elected official at the national level.</li>
+        <li>The VRC and King may enact regulations detailing the procedural, statutory, and administrative aspects of these local lordships.</li>
       </ol>
 
       <h3>Article III — Rights and Duties of Citizens</h3>
       <ol>
-        <li>All Valorian citizens are fundamentally equal before the law and enjoy baseline rights to safety, free vocal expression, private property, and a fair trial[cite: 219].</li>
-        <li>As an elite merchant realm, civic participation and profitable employment are protected duties[cite: 220]. The Crown guarantees that the free market remains competitive, unmonopolized, and open to any citizen possessing the drive to build wealth[cite: 220].</li>
-        <li>To safeguard our borders against foreign overreach, citizens retain the right to bear arms[cite: 221]. The state provides elite military and defensive training to all registered members of the territorial citizen militia[cite: 221].</li>
-        <li>The government may take exceptional security measures in times of verified war or emergency subject to prompt VRC review[cite: 222].</li>
+        <li>All Valorian citizens are fundamentally equal before the law and enjoy baseline rights to safety, free vocal expression, private property, and a fair trial.</li>
+        <li>As an elite merchant realm, civic participation and profitable employment are protected duties. The Crown guarantees that the free market remains competitive, unmonopolized, and open to any citizen possessing the drive to build wealth.</li>
+        <li>To safeguard our borders against foreign overreach, citizens retain the right to bear arms. The state provides elite military and defensive training to all registered members of the territorial citizen militia.</li>
+        <li>The government may take exceptional security measures in times of verified war or emergency subject to prompt VRC review.</li>
       </ol>
 
       <h3>Article IV — The Capitalist Engine & Strategic Neutrality</h3>
       <ol>
-        <li>Valoria's policy intensely prioritizes commerce, corporate innovation, and fair trade [cite: 223], seeking to be a regional trading hub and mediator[cite: 224]. Regular taxation is legally capped at a minimal flat baseline to encourage maximum domestic reinvestment and reward financial success.</li>
-        <li>To foster nationalist economic dominance, Valorian-owned businesses are granted strict preferential priority in all domestic government procurement and infrastructural contracts where appropriate[cite: 225].</li>
-        <li>Valoria formally recognizes the legitimacy of negotiated free trade agreements (such as with the Astari)[cite: 227]. Trade agreements may be entered into by the VRC with proper council oversight[cite: 228].</li>
-        <li>The realm maintains strict geopolitical neutrality in foreign wars, keeping our trade ports open and protecting corporate investments from international instability[cite: 229, 230].</li>
+        <li>Valoria's policy intensely prioritizes commerce, corporate innovation, and fair trade, seeking to be a regional trading hub and mediator. Regular taxation is legally capped at a minimal flat baseline to encourage maximum domestic reinvestment and reward financial success.</li>
+        <li>To foster nationalist economic dominance, Valorian-owned businesses are granted strict preferential priority in all domestic government procurement and infrastructural contracts where appropriate.</li>
+        <li>Valoria formally recognizes the legitimacy of negotiated free trade agreements (such as with the Astari). Trade agreements may be entered into by the VRC with proper council oversight.</li>
+        <li>The realm maintains strict geopolitical neutrality in foreign wars, keeping our trade ports open and protecting corporate investments from international instability.</li>
       </ol>
 
       <h3>Article V — Security, Defense, and the Citizen Army</h3>
       <ol>
-        <li>The defense of Valoria is a shared responsibility[cite: 231]. The Valorian Internal Service (VIS) maintains domestic order [cite: 232], while a trained citizen militia exists for territorial defense[cite: 232].</li>
-        <li>Mobilization for external campaigns shall strictly follow VRC procedures[cite: 233]. Where possible, Valoria emphasizes defensive readiness and avoids entanglement in foreign power struggles[cite: 234].</li>
-        <li>The VIS coordinates with the UUR for joint defense obligations, subject always to the VRC's guidance and citizen safeguards[cite: 235].</li>
+        <li>The defense of Valoria is a shared responsibility. The Valorian Internal Service (VIS) maintains domestic order, while a trained citizen militia exists for territorial defense.</li>
+        <li>Mobilization for external campaigns shall strictly follow VRC procedures. Where possible, Valoria emphasizes defensive readiness and avoids entanglement in foreign power struggles.</li>
+        <li>The VIS coordinates with the UUR for joint defense obligations, subject always to the VRC's guidance and citizen safeguards.</li>
       </ol>
 
       <h3>Article VI — Culture, Identity, and Local Autonomy</h3>
       <ol>
-        <li>Valorian culture, language, and heritage shall be preserved and actively promoted by the state[cite: 236].</li>
-        <li>Other cultures are respected within Valoria and in Alter Hafen's multicultural administration, provided they do not seek to undermine the Valorian constitutional order[cite: 237].</li>
-        <li>Acts intended to provoke civil unrest through cultural mockery are legally discouraged and addressed within the bounds of law and proportionality[cite: 238].</li>
+        <li>Valorian culture, language, and heritage shall be preserved and actively promoted by the state.</li>
+        <li>Other cultures are respected within Valoria and in Alter Hafen's multicultural administration, provided they do not seek to undermine the Valorian constitutional order.</li>
+        <li>Acts intended to provoke civil unrest through cultural mockery are legally discouraged and addressed within the bounds of law and proportionality.</li>
       </ol>
 
       <h3>Article VII — Treason, Loyalty, and Public Office</h3>
       <ol>
-        <li>Officials and citizens sworn into public office shall pledge loyalty to Valoria and respect Valorian national obligations[cite: 239].</li>
-        <li>Treason, rebellion, or deliberate acts of subversion against Valoria are aggressively prosecutable under the law[cite: 240].</li>
-        <li>The VRC holds the constitutional authority to review alleged breaches by high officials, while formal adjudication remains the remit of the independent courts[cite: 241].</li>
+        <li>Officials and citizens sworn into public office shall pledge loyalty to Valoria and respect Valorian national obligations.</li>
+        <li>Treason, rebellion, or deliberate acts of subversion against Valoria are aggressively prosecutable under the law.</li>
+        <li>The VRC holds the constitutional authority to review alleged breaches by high officials, while formal adjudication remains the remit of the independent courts.</li>
       </ol>
 
       <h3>Article VIII — The Rule of Law & Judicial Separation</h3>
       <ol>
-        <li>All citizens and officials are unconditionally bound by this Constitution[cite: 242].</li>
-        <li>Laws may be enacted by the VRC and require formal assent as defined in national statute[cite: 243].</li>
-        <li>To preserve logical fairness, the judiciary shall remain structurally independent from daily political interference, ensuring complete due process, proportionality, and transparency[cite: 244].</li>
+        <li>All citizens and officials are unconditionally bound by this Constitution.</li>
+        <li>Laws may be enacted by the VRC and require formal assent as defined in national statute.</li>
+        <li>To preserve logical fairness, the judiciary shall remain structurally independent from daily political interference, ensuring complete due process, proportionality, and transparency.</li>
       </ol>
 
       <h3>Article IX — Amendments and Citizen Referenda</h3>
       <ol>
-        <li>This Constitution may be amended by a two-thirds majority of the VRC and approval by the King, or by constitutional process initiated via citizen referendum when permitted by the VRC[cite: 245].</li>
-        <li>For major structural changes (including alteration of VRC composition or core sovereignty clauses), a supermajority in the VRC and a citizen referendum are required[cite: 246].</li>
-        <li>Procedures for citizen initiatives, thresholds, and referendum administration shall be detailed in implementing statute[cite: 247].</li>
+        <li>This Constitution may be amended by a two-thirds majority of the VRC and approval by the King, or by constitutional process initiated via citizen referendum when permitted by the VRC.</li>
+        <li>For major structural changes (including alteration of VRC composition or core sovereignty clauses), a supermajority in the VRC and a citizen referendum are required.</li>
+        <li>Procedures for citizen initiatives, thresholds, and referendum administration shall be detailed in implementing statute.</li>
       </ol>
 
       <h3>Article X — Implementation</h3>
       <ol>
-        <li>This Constitution takes precedence over ordinary statute[cite: 248]. Transitional provisions shall be enacted to reflect the current VRC power distribution and the three-member VRC composition described herein[cite: 249].</li>
+        <li>This Constitution takes precedence over ordinary statute. Transitional provisions shall be enacted to reflect the current VRC power distribution and the three-member VRC composition described herein.</li>
       </ol>
 
       <h3>Article XI — The Territory of Determa & Sovereign Integration</h3>
       <ol>
         <h4>Section 1 — Security and Strategic Protection</h4>
-        <li>Determa is officially recognized as a colonial territory under the sole sovereignty and protection of the Kingdom of Valoria, following formal approval from the UUR[cite: 250]. The strategic military base left by the UUR in Determa shall be fully managed and controlled by the Valorian Crown to ensure regional security and defense[cite: 251].</li>
+        <li>Determa is officially recognized as a colonial territory under the sole sovereignty and protection of the Kingdom of Valoria, following formal approval from the UUR. The strategic military base left by the UUR in Determa shall be fully managed and controlled by the Valorian Crown to ensure regional security and defense.</li>
         <h4>Section 2 — Local Administration and Governance</h4>
-        <li>The King of Valoria will manage the daily affairs, economy, and infrastructure of Determa himself, with support from the VRC[cite: 252]. Valoria commits to establishing a stable, peaceful environment in Determa to prevent future revolutions, political unrest, or radical systemic changes[cite: 253]. Valorian laws shall apply[cite: 253].</li>
+        <li>The King of Valoria will manage the daily affairs, economy, and infrastructure of Determa himself, with support from the VRC. Valoria commits to establishing a stable, peaceful environment in Determa to prevent future revolutions, political unrest, or radical systemic changes. Valorian laws shall apply.</li>
         <h4>Section 3 — Political Participation and Voting Rights</h4>
-        <li>The Valorian citizens of Determa shall have the right to vote in regular Valorian polls[cite: 254]. Valoria continues the process of granting the people of Determa a "Valorianischer Pass"[cite: 255]. Only people with this citizenship or verified local property ownership will be allowed to vote in Valorian and Determian matters or actively engage in regional politics[cite: 256, 257]. To ensure fair representation, the "Determianischer Rat" is established[cite: 258]. This assembly can draft local policies and suggestions, subject to final approval by the VRC and the King[cite: 258].</li>
+        <li>The Valorian citizens of Determa shall have the right to vote in regular Valorian polls. Valoria continues the process of granting the people of Determa a "Valorianischer Pass". Only people with this citizenship or verified local property ownership will be allowed to vote in Valorian and Determian matters or actively engage in regional politics. To ensure fair representation, the "Determianischer Rat" is established. This assembly can draft local policies and suggestions, subject to final approval by the VRC and the King.</li>
         <h4>Section 4 — Enlightened Corporate Expansion</h4>
-        <li>Trade between Valoria and Determa shall be protected and promoted[cite: 259]. Valorian enterprises enjoy preferential trading and resource-extraction rights to rapidly build regional commerce[cite: 260]. Companies are encouraged to expand into Determa[cite: 261]. However, to ensure this is "good for the people," any mainland corporation operating in Determa is legally required to invest 5% of gross regional profits into building local infrastructure, modern housing, medical clinics, and schools, securing local loyalty to the Crown through tangible human prosperity[cite: 261].</li>
+        <li>Trade between Valoria and Determa shall be protected and promoted. Valorian enterprises enjoy preferential trading and resource-extraction rights to rapidly build regional commerce. Companies are encouraged to expand into Determa. However, to ensure this is "good for the people," any mainland corporation operating in Determa is legally required to invest 5% of gross regional profits into building local infrastructure, modern housing, medical clinics, and schools, securing local loyalty to the Crown through tangible human prosperity.</li>
       </ol>
     </section>
 
@@ -365,299 +809,299 @@ li::marker {
       <h3>Title I — General Provisions</h3>
       <div class="law-card">
         <h5>Article 1 — Purpose</h5>
-        <p>The Valorian Law Codex ensures order, justice, and the systematic protection of Valoria's sovereignty, culture, economy, and citizens[cite: 263].</p>
+        <p>The Valorian Law Codex ensures order, justice, and the systematic protection of Valoria's sovereignty, culture, economy, and citizens.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 2 — Supremacy of the Constitution</h5>
-        <p>All laws derive their absolute authority from the Valorian Constitution. In any conflict, constitutional principles prevail[cite: 264].</p>
+        <p>All laws derive their absolute authority from the Valorian Constitution. In any conflict, constitutional principles prevail.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 3 — Equality and Accountability</h5>
-        <p>All Valorians are entirely equal before the law regardless of heritage, belief, or station[cite: 265]. High office, elite lineage, or immense commercial wealth grants absolutely no immunity from criminal prosecution or anti-corruption laws[cite: 265]. Code infractions by high officials are treated with double severity to maintain public trust[cite: 265].</p>
+        <p>All Valorians are entirely equal before the law regardless of heritage, belief, or station. High office, elite lineage, or immense commercial wealth grants absolutely no immunity from criminal prosecution or anti-corruption laws. Code infractions by high officials are treated with double severity to maintain public trust.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 4 — Purpose of the Law</h5>
-        <p>The Valorian legal system is designed to secure public order, absolute protection of property rights, business continuity, and the systemic rehabilitation of offenders back into productive, tax-paying components of the capitalist kingdom[cite: 266, 267].</p>
+        <p>The Valorian legal system is designed to secure public order, absolute protection of property rights, business continuity, and the systemic rehabilitation of offenders back into productive, tax-paying components of the capitalist kingdom.</p>
       </div>
 
       <h3>Title II — Crimes Against the Realm</h3>
       <h4>Chapter 1 — Treason and Rebellion</h4>
       <div class="law-card">
         <h5>Article 5.1 — High Treason</h5>
-        <p>Deliberate actions intended to violently sabotage, subvert, or overthrow the Valorian Crown, its economy, or its collective alliances[cite: 268].</p>
-        <span class="punishment">→ Mandatory Penalty: Complete asset forfeiture, stripping of citizenship, and permanent exile or lifelong high-security labor confinement[cite: 269].</span>
+        <p>Deliberate actions intended to violently sabotage, subvert, or overthrow the Valorian Crown, its economy, or its collective alliances.</p>
+        <span class="punishment">→ Mandatory Penalty: Complete asset forfeiture, stripping of citizenship, and permanent exile.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 5.2 — Sedition and Civil Disorder</h5>
-        <p>Organizing, funding, or leading violent demonstrations intended to oppose lawful authority or promote widespread municipal disorder[cite: 270].</p>
-        <span class="punishment">→ Mandatory Penalty: 3–15 days imprisonment or a heavy financial fine proportional to the economic damage caused[cite: 271].</span>
+        <p>Organizing, funding, or leading violent demonstrations intended to oppose lawful authority or promote widespread municipal disorder.</p>
+        <span class="punishment">→ Mandatory Penalty: 3–15 days imprisonment or a heavy financial fine proportional to the economic damage caused.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 5.3 — Foreign Collaboration</h5>
-        <p>Deliberate cooperation or sharing of secrets with hostile powers to Valoria's economic or military detriment[cite: 272].</p>
-        <span class="punishment">→ Mandatory Penalty: 15–30 days high-security imprisonment and total asset seizure appropriate to the breach[cite: 273].</span>
+        <p>Deliberate cooperation or sharing of secrets with hostile powers to Valoria's economic or military detriment.</p>
+        <span class="punishment">→ Mandatory Penalty: 15–30 days high-security imprisonment and total asset seizure appropriate to the breach.</span>
       </div>
 
       <h4>Chapter 2 — Symbolic Acts and Loyalty</h4>
       <div class="law-card">
         <h5>Article 6.1 — Insulting the Realm</h5>
-        <p>Publicly mocking Valoria's core institutions or national symbols in a malicious way that intentionally incites civil disorder[cite: 274].</p>
-        <span class="punishment">→ Mandatory Penalty: Fines or civic corrective measures proportional to the harm inflicted[cite: 275].</span>
+        <p>Publicly mocking Valoria's core institutions or national symbols in a malicious way that intentionally incites civil disorder.</p>
+        <span class="punishment">→ Mandatory Penalty: Fines or civic corrective measures proportional to the harm inflicted.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 6.2 — Royal Disrespect</h5>
-        <p>Unlawful, targeted slander or malicious harassment of the Royal Family intended to destabilize public faith in the state[cite: 276].</p>
-        <span class="punishment">→ Mandatory Penalty: Strict administrative fines, mandatory community service, or public restorative measures[cite: 276].</span>
+        <p>Unlawful, targeted slander or malicious harassment of the Royal Family intended to destabilize public faith in the state.</p>
+        <span class="punishment">→ Mandatory Penalty: Strict administrative fines, mandatory community service, or public restorative measures.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 6.3 — Anti-Traditionalist Subversion</h5>
-        <p>Publicly deploying banned, radical pre-reform symbols or organizing riots intended to intentionally mock Valorian cultural identity or incite internal race/class warfare[cite: 277].</p>
-        <span class="punishment">→ Mandatory Penalty: Heavy financial restitution to affected neighborhoods or mandatory public corrective labor[cite: 278].</span>
+        <p>Publicly deploying banned, radical pre-reform symbols or organizing riots intended to intentionally mock Valorian cultural identity or incite internal race/class warfare.</p>
+        <span class="punishment">→ Mandatory Penalty: Heavy financial restitution to affected neighborhoods or mandatory public corrective labor.</span>
       </div>
 
       <h3>Title III — Civil and Social Order</h3>
       <h4>Chapter 1 — Conduct and Respect</h4>
       <div class="law-card">
         <h5>Article 7.1 — Disrespect Toward Authority</h5>
-        <p>Willful refusal to comply with lawful civic orders from officials or targeted harassment of on-duty personnel[cite: 279].</p>
-        <span class="punishment">→ Mandatory Penalty: Standardized fines or required civic service[cite: 279].</span>
+        <p>Willful refusal to comply with lawful civic orders from officials or targeted harassment of on-duty personnel.</p>
+        <span class="punishment">→ Mandatory Penalty: Standardized fines or required civic service.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 7.2 — Threats and Harassment</h5>
-        <p>Threatening, coercive, or highly predatory behavioral harassment against any citizen[cite: 280].</p>
-        <span class="punishment">→ Mandatory Penalty: Heavy commercial fines or short-term confinement[cite: 280].</span>
+        <p>Threatening, coercive, or highly predatory behavioral harassment against any citizen.</p>
+        <span class="punishment">→ Mandatory Penalty: Heavy commercial fines or short-term confinement.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 7.3 — Destruction of Property</h5>
-        <p>Intentional damage to public infrastructure or private citizen property[cite: 281].</p>
-        <span class="punishment">→ Mandatory Penalty: Immediate 100% financial restitution plus additional punitive fines or community labor[cite: 281].</span>
+        <p>Intentional damage to public infrastructure or private citizen property.</p>
+        <span class="punishment">→ Mandatory Penalty: Immediate 100% financial restitution plus additional punitive fines or community labor.</span>
       </div>
 
       <h4>Chapter 2 — Theft, Fraud, and Deception</h4>
       <div class="law-card">
         <h5>Article 8.1 — Theft</h5>
-        <p>Taking the property, assets, or goods of another without clear and documented consent[cite: 282].</p>
-        <span class="punishment">→ Mandatory Penalty: Full return of stolen goods, total financial restitution, or proportionate confinement[cite: 282].</span>
+        <p>Taking the property, assets, or goods of another without clear and documented consent.</p>
+        <span class="punishment">→ Mandatory Penalty: Full return of stolen goods, total financial restitution, or proportionate confinement.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 8.2 — Fraud</h5>
-        <p>Deceit, corporate misrepresentation, or financial scamming for material gain[cite: 283].</p>
-        <span class="punishment">→ Mandatory Penalty: 100% restitution to victims plus heavy court-enforced fines or confinement[cite: 283].</span>
+        <p>Deceit, corporate misrepresentation, or financial scamming for material gain.</p>
+        <span class="punishment">→ Mandatory Penalty: 100% restitution to victims plus heavy court-enforced fines or confinement.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 8.3 — Exploitation of Loopholes</h5>
-        <p>Exploiting obvious statutory gaps to gain an unfair, non-competitive market advantage. Such acts will be immediately remedied by judicial penalty and swift legislative correction[cite: 284].</p>
+        <p>Exploiting obvious statutory gaps to gain an unfair, non-competitive market advantage. Such acts will be immediately remedied by judicial penalty and swift legislative correction.</p>
       </div>
 
       <h4>Chapter 3 — Public Morality and Health</h4>
       <div class="law-card">
         <h5>Article 9.1 — Drug Prohibition</h5>
-        <p>Non-authorized production, trade, smuggling, or use of illegal narcotics[cite: 285]. Licensed scientific or medical exceptions apply under strict regulation[cite: 286].</p>
-        <span class="punishment">→ Mandatory Penalty: Custodial rehabilitation measures, asset confiscation, and trade banishment[cite: 285].</span>
+        <p>Non-authorized production, trade, smuggling, or use of illegal narcotics. Licensed scientific or medical exceptions apply under strict regulation.</p>
+        <span class="punishment">→ Mandatory Penalty: Custodial rehabilitation measures, asset confiscation, and trade banishment.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 9.2 — Disorderly Conduct</h5>
-        <p>Public intoxication, violent outbursts, or indecent acts that explicitly disrupt the marketplace public peace[cite: 287].</p>
-        <span class="punishment">→ Mandatory Penalty: Fines or forced civic service hours[cite: 287].</span>
+        <p>Public intoxication, violent outbursts, or indecent acts that explicitly disrupt the marketplace public peace.</p>
+        <span class="punishment">→ Mandatory Penalty: Fines or forced civic service hours.</span>
       </div>
 
       <h3>Title IV — Economic and Administrative Laws</h3>
       <div class="law-card">
         <h5>Article 10 — Anti-Oligarchic Market Manipulation</h5>
-        <p>Valorian and allied enterprises are given absolute preference in procurement to ensure national dominance[cite: 288]. However, sellers, syndicates, or wealthy cartels are strictly banned from enacting "Phantom Bidding" or deploying fake identities to artificially inflate prices[cite: 314]. Monopolistic market hoarding that suffocates small business competitors or deliberate sabotage of domestic infrastructure is aggressively penalized[cite: 289].</p>
-        <span class="punishment">→ Mandatory Penalty: Immediate revocation of merchant trading licenses and a fine equal to 200% of the fraudulent transaction value[cite: 289, 314].</span>
+        <p>Valorian and allied enterprises are given absolute preference in procurement to ensure national dominance. However, sellers, syndicates, or wealthy cartels are strictly banned from enacting "Phantom Bidding" or deploying fake identities to artificially inflate prices. Monopolistic market hoarding that suffocates small business competitors or deliberate sabotage of domestic infrastructure is aggressively penalized.</p>
+        <span class="punishment">→ Mandatory Penalty: Immediate revocation of merchant trading licenses and a fine equal to 200% of the fraudulent transaction value.</span>
       </div>
 
       <div class="law-card">
         <h5>Article 11 — Corruption and Abuse of Office</h5>
-        <p>Public officials engaging in bribery, extortion, or corporate favoritism face immediate dismissal, permanent blacklisting, asset seizure, and severe criminal sanction[cite: 290].</p>
+        <p>Public officials engaging in bribery, extortion, or corporate favoritism face immediate dismissal, permanent blacklisting, asset seizure, and severe criminal sanction.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 12 — Tax and Contribution</h5>
-        <p>Valoria imposes a minimal flat regular taxation structure to protect private wealth[cite: 291]. In exceptional emergency circumstances, mandatory civic contributions or defensive service hours may be temporarily enacted under direct VRC law and oversight[cite: 292].</p>
+        <p>Valoria imposes a minimal flat regular taxation structure to protect private wealth. In exceptional emergency circumstances, mandatory civic contributions or defensive service hours may be temporarily enacted under direct VRC law and oversight.</p>
       </div>
 
       <h3>Title V — Rights and Safeguards</h3>
       <div class="law-card">
         <h5>Article 13 — Right to Fair Trial</h5>
-        <p>Every accused individual has the absolute right to a legal defense, professional representation, and a structured appeal process[cite: 293].</p>
+        <p>Every accused individual has the absolute right to a legal defense, professional representation, and a structured appeal process.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 14 — Privacy and Dignity</h5>
-        <p>Private correspondence, homes, corporate offices, and personal property are completely protected from unlawful intrusion or warrantless search[cite: 294].</p>
+        <p>Private correspondence, homes, corporate offices, and personal property are completely protected from unlawful intrusion or warrantless search.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 15 — Emergency Suspension of Rights</h5>
-        <p>In times of certified war or critical national emergency, certain civic rights may be temporarily limited by lawful decree, subject to immediate, prompt VRC review and independent judicial oversight[cite: 295].</p>
+        <p>In times of certified war or critical national emergency, certain civic rights may be temporarily limited by lawful decree, subject to immediate, prompt VRC review and independent judicial oversight.</p>
       </div>
 
       <h3>Title VI — Implementation and Interpretation</h3>
       <div class="law-card">
         <h5>Article 16 — Judiciary Authority</h5>
-        <p>The Royal Court of Valoria interprets this Codex, and its rulings set clear, binding national legal precedents[cite: 296].</p>
+        <p>The Royal Court of Valoria interprets this Codex, and its rulings set clear, binding national legal precedents.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 17 — Enforcement</h5>
-        <p>The Valorian Internal Service (VIS) enforces this Codex under strict oversight of the Ministry of Justice and Security and remains entirely subject to judicial review to prevent police overreach[cite: 297].</p>
+        <p>The Valorian Internal Service (VIS) enforces this Codex under strict oversight of the Ministry of Justice and Security and remains entirely subject to judicial review to prevent police overreach.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 18 — Amendments to the Codex</h5>
-        <p>Laws within this Codex may be modified by the VRC with comprehensive council oversight and the formal assent required by the Constitution[cite: 298].</p>
+        <p>Laws within this Codex may be modified by the VRC with comprehensive council oversight and the formal assent required by the Constitution.</p>
       </div>
 
       <h3>Title VII — Special Provisions</h3>
       <div class="law-card">
         <h5>Article 19 — Alter Hafen Autonomy</h5>
-        <p>Alter Hafen retains its historic municipal autonomy in local governance, trade administration, and cultural affairs consistent with Valorian law[cite: 299]. Disputes between Alter Hafen officials and Valorian authorities are resolved through designated independent judicial arbitration mechanisms[cite: 300].</p>
+        <p>Alter Hafen retains its historic municipal autonomy in local governance, trade administration, and cultural affairs consistent with Valorian law. Disputes between Alter Hafen officials and Valorian authorities are resolved through designated independent judicial arbitration mechanisms.</p>
       </div>
 
       <div class="law-card">
         <h5>Article 20 — Trade and External Agreements</h5>
-        <p>Valoria may enter trade and alliance agreements (including free trade with the Astari)[cite: 301]. Such agreements shall be structured to preserve Valoria's neutrality posture where possible and to respect core UUR obligations[cite: 302].</p>
+        <p>Valoria may enter trade and alliance agreements (including free trade with the Astari). Such agreements shall be structured to preserve Valoria's neutrality posture where possible and to respect core UUR obligations.</p>
       </div>
 
       <h3>Title VIII — The Professionalized Court System</h3>
       <div class="law-card">
         <h5>Article 21 & 22 — Strict Separation of the Judiciary</h5>
-        <p>To guarantee complete logical fairness, daily civil and criminal trials are overseen exclusively by professional, independent Law Speakers (Judges) who are insulated from active political office[cite: 303].
+        <p>To guarantee complete logical fairness, daily civil and criminal trials are overseen exclusively by professional, independent Law Speakers (Judges) who are insulated from active political office.
         <br><br>
-        <strong>The Supreme Constitutional Appellate Bench:</strong> The King and the two VRC Lords do not hear daily trials[cite: 304]. They sit *exclusively* as a supreme three-judge review panel reserved only for high-tier corporate disputes, international treaties, or cases where a citizen challenges the constitutionality of a VRC edict[cite: 304]. Every trial, piece of evidence, and final verdict must be logged publicly in the open *Ledger of Alter Hafen*, preventing secret trials or aristocratic rigging[cite: 308, 310]. Final verdicts on this supreme bench require a majority vote of the panel[cite: 307]. No secret evidence may ever be used to convict a citizen[cite: 309].</p>
+        <strong>The Supreme Constitutional Appellate Bench:</strong> The King and the two VRC Lords do not hear daily trials. They sit <em>exclusively</em> as a supreme three-judge review panel reserved only for high-tier corporate disputes, international treaties, or cases where a citizen challenges the constitutionality of a VRC edict. Every trial, piece of evidence, and final verdict must be logged privately unless exceptions are made, preventing leaking anything private from the subject. Final verdicts on this supreme bench require a majority vote of the panel. No secret evidence may ever be used to convict a citizen.</p>
       </div>
 
       <h3>Title IX — Marketplace, Trading, and Bidding Laws</h3>
       <h4>Chapter 1 — General Trade Rules</h4>
       <div class="law-card">
         <h5>Article 1 — The Open Market Rule</h5>
-        <p>All trades made in public markets must use official, standardized Valorian weights and measures to protect buyers and prevent fraud[cite: 311].</p>
+        <p>All trades made in public markets must use official, standardized Valorian weights and measures to protect buyers and prevent fraud.</p>
       </div>
       <div class="law-card">
         <h5>Article 2 — The Verbal Bond</h5>
-        <p>A verbal agreement to trade goods is legally binding if witnessed by at least one neutral citizen or recorded in writing[cite: 312].</p>
+        <p>A verbal agreement to trade goods is legally binding if witnessed by at least one neutral citizen or recorded in writing.</p>
       </div>
 
       <h4>Chapter 2 — Bidding and Auction Laws</h4>
       <div class="law-card">
         <h5>Article 9 — The Valid Bid</h5>
-        <p>Once a citizen places a bid in an official auction, they cannot withdraw it unless outbid by another party[cite: 313].</p>
+        <p>Once a citizen places a bid in an official auction, they cannot withdraw it unless outbid by another party.</p>
       </div>
       <div class="law-card">
         <h5>Article 10 — Phantom Bidding Ban</h5>
-        <p>Sellers may not hire friends or use fake names to place false bids to drive up the price of their own items[cite: 314].</p>
+        <p>Sellers may not hire friends or use fake names to place false bids to drive up the price of their own items.</p>
       </div>
       <div class="law-card">
         <h5>Article 11 — The Hammer Rule</h5>
-        <p>An auction item belongs to the highest bidder the moment the auctioneer’s hammer falls or the official timer ends[cite: 315].</p>
+        <p>An auction item belongs to the highest bidder the moment the auctioneer's hammer falls or the official timer ends.</p>
       </div>
       <div class="law-card">
         <h5>Article 12 — Non-Payment Penalty</h5>
-        <p>If a winning bidder fails to pay for the item within 72 hours, the sale is cancelled, and the winner must pay a fine equal to 30% of their bid[cite: 316]. Sellers may sue for further damages in court if necessary[cite: 317].</p>
+        <p>If a winning bidder fails to pay for the item within 72 hours, the sale is cancelled, and the winner must pay a fine equal to 30% of their bid. Sellers may sue for further damages in court if necessary.</p>
       </div>
       <div class="law-card">
         <h5>Article 13 — Minimum Reserves</h5>
-        <p>Sellers must state before the bidding starts if there is a minimum hidden price (reserve) the item must reach to be sold[cite: 318].</p>
+        <p>Sellers must state before the bidding starts if there is a minimum hidden price (reserve) the item must reach to be sold.</p>
       </div>
       <div class="law-card">
         <h5>Article 14 — Auctioneer Neutrality</h5>
-        <p>The person running the auction cannot bid on the items they are actively selling[cite: 319].</p>
+        <p>The person running the auction cannot bid on the items they are actively selling.</p>
       </div>
 
       <h3>Title X — Civil, Property, and Daily Kingdom Laws</h3>
       <h4>Chapter 1 — Land and Housing</h4>
       <div class="law-card">
         <h5>Article 15 — Land Boundaries</h5>
-        <p>Boundaries are made by the Crown or local Lords to define property lines[cite: 320]. Moving a boundary marker secretly is a major criminal offense[cite: 320].</p>
+        <p>Boundaries are made by the Crown or local Lords to define property lines. Moving a boundary marker secretly is a major criminal offense.</p>
       </div>
       <div class="law-card">
         <h5>Article 16 — Abandoned Property</h5>
-        <p>If a house or plot of land is left unused and unpaid for more than 60 days without prior notice, the Crown may reclaim it[cite: 321].</p>
+        <p>If a house or plot of land is left unused and unpaid for more than 60 days without prior notice, the Crown may reclaim it.</p>
       </div>
       <div class="law-card">
         <h5>Article 17 — Right of Way</h5>
-        <p>Citizens may cross private land if it is the only accessible route to a public road, well, or harbor, provided they cause no damage[cite: 322].</p>
+        <p>Citizens may cross private land if it is the only accessible route to a public road, well, or harbor, provided they cause no damage.</p>
       </div>
       <div class="law-card">
         <h5>Article 18 — Renting Fairness</h5>
-        <p>To preserve social peace and protect working families from predatory exploitation, landlords must give tenants a minimum of 30 days' formal written notice before an eviction can take place[cite: 323]. Instantaneous evictions are strictly illegal, unless the tenant has committed verifiable property destruction or has willfully refused rental payment for over 60 consecutive days[cite: 323].</p>
+        <p>To preserve social peace and protect working families from predatory exploitation, landlords must give tenants a minimum of 30 days' formal written notice before an eviction can take place. Instantaneous evictions are strictly illegal, unless the tenant has committed verifiable property destruction or has willfully refused rental payment for over 60 consecutive days.</p>
       </div>
       <div class="law-card">
         <h5>Article 19 — Collateral Protection</h5>
-        <p>If a citizen borrows money using their home or tools as collateral, the lender cannot seize the property without an explicit Royal Court order[cite: 324].</p>
+        <p>If a citizen borrows money using their home or tools as collateral, the lender cannot seize the property without an explicit Royal Court order.</p>
       </div>
       <div class="law-card">
         <h5>Article 20 — Building Safety</h5>
-        <p>Any structure built in a city must match the architectural style and structural baseline safety regulations of the district[cite: 325].</p>
+        <p>Any structure built in a city must match the architectural style and structural baseline safety regulations of the district.</p>
       </div>
 
       <h4>Chapter 2 — Contracts, Debts, and Labor</h4>
       <div class="law-card">
         <h5>Article 21 — The Written Word</h5>
-        <p>Partnerships or business agreements involving shared profits must be formally written down and signed by both parties[cite: 326].</p>
+        <p>Partnerships or business agreements involving shared profits must be formally written down and signed by both parties.</p>
       </div>
       <div class="law-card">
         <h5>Article 22 — Human-Dignity Restorative Service</h5>
-        <p>Raw debt slavery and the physical ownership of individuals are permanently outlawed[cite: 327]. If a citizen falls into a certified, unpayable civil debt, the independent courts shall place them into **Restorative Commercial Service**[cite: 327]. The debtor is matched with a fair-wage enterprise, keeping a protected portion of their earnings for housing and food, while the remaining surplus is paid directly to the lender until the ledger is entirely cleared[cite: 327]. This preserves the rich man's capital while protecting the poor man's human dignity[cite: 327].</p>
+        <p>Raw debt slavery and the physical ownership of individuals are permanently outlawed. If a citizen falls into a certified, unpayable civil debt, the independent courts shall place them into <strong>Restorative Commercial Service</strong>. The debtor is matched with a fair-wage enterprise, keeping a protected portion of their earnings for housing and food, while the remaining surplus is paid directly to the lender until the ledger is entirely cleared. This preserves the rich man's capital while protecting the poor man's human dignity.</p>
       </div>
       <div class="law-card">
         <h5>Article 23 — Fair Wages</h5>
-        <p>Workers must be paid exactly the amount agreed upon in their contract; wage theft by employers is heavily penalized[cite: 328].</p>
+        <p>Workers must be paid exactly the amount agreed upon in their contract; wage theft by employers is heavily penalized.</p>
       </div>
       <div class="law-card">
         <h5>Article 24 — Mandatory Industrial Safety and Corporate Liability</h5>
-        <p>While workers must remain personally alert and undergo mandatory safety training, all industrial employers and wealthy business enterprises are legally mandated to maintain rigorously certified, structurally sound, and secure operational environments[cite: 329]. If a worker is injured due to a corporation’s failure to maintain safe equipment or updated protocols, the employer is automatically held fully liable under the law[cite: 329]. The enterprise must fund 100% of the worker’s medical recovery and provide full wage compensation during rehabilitation[cite: 329].</p>
+        <p>While workers must remain personally alert and undergo mandatory safety training, all industrial employers and wealthy business enterprises are legally mandated to maintain rigorously certified, structurally sound, and secure operational environments. If a worker is injured due to a corporation's failure to maintain safe equipment or updated protocols, the employer is automatically held fully liable under the law. The enterprise must fund 100% of the worker's medical recovery and provide full wage compensation during rehabilitation.</p>
       </div>
       <div class="law-card">
         <h5>Article 25 — Money Oversight</h5>
-        <p>The VRC or King can request to see salary and company fiscal records to prevent corporate tax evasion or labor exploitation[cite: 330].</p>
+        <p>The VRC or King can request to see salary and company fiscal records to prevent corporate tax evasion or labor exploitation.</p>
       </div>
       <div class="law-card">
         <h5>Article 26 — Contract Breaking</h5>
-        <p>Walking away from a half-finished building or service contract without a valid emergency allows the victim to claim full damages in court[cite: 331].</p>
+        <p>Walking away from a half-finished building or service contract without a valid emergency allows the victim to claim full damages in court.</p>
       </div>
 
       <h4>Chapter 3 — Harbor Rules</h4>
       <div class="law-card">
         <h5>Article 27 — Smuggling</h5>
-        <p>Bringing goods into Valoria without passing through official harbor checkpoints to avoid trade duties will result in the immediate confiscation of the cargo and commercial fines[cite: 332].</p>
+        <p>Bringing goods into Valoria without passing through official harbor checkpoints to avoid trade duties will result in the immediate confiscation of the cargo and commercial fines.</p>
       </div>
 
       <h3>Title XI — Public Order, Safety, and Military Laws</h3>
       <h4>Chapter 1 — Weaponry and Military Service</h4>
       <div class="law-card">
         <h5>Article 28 — Weapon Registration</h5>
-        <p>While people have the right to bear arms for defense, firearms require a specific license from the VRC to track distribution[cite: 333].</p>
+        <p>While people have the right to bear arms for defense, firearms require a specific license from the VRC to track distribution.</p>
       </div>
       <div class="law-card">
         <h5>Article 29 — Conscription Readiness</h5>
-        <p>In times of defensive emergency, every able-bodied citizen registered in the militia must report to their local post within 48 hours of the horn blast[cite: 334].</p>
+        <p>In times of defensive emergency, every able-bodied citizen registered in the militia must report to their local post within 48 hours of the horn blast.</p>
       </div>
       <div class="law-card">
         <h5>Article 30 — Militia Care</h5>
-        <p>Citizens must keep their personal armor and weapons clean, functional, and ready for inspection by the VIS[cite: 335].</p>
+        <p>Citizens must keep their personal armor and weapons clean, functional, and ready for inspection by the VIS.</p>
       </div>
       <div class="law-card">
         <h5>Article 31 — Banned Public Drawing</h5>
-        <p>Drawing a weapon in an aggressive manner inside a tavern or public square, unless in clear self-defense, is a severe breach of peace[cite: 336].</p>
+        <p>Drawing a weapon in an aggressive manner inside a tavern or public square, unless in clear self-defense, is a severe breach of peace.</p>
       </div>
       <div class="law-card">
         <h5>Article 32 — Desertion</h5>
-        <p>Running away from the militia line during a defensive battle is punishable by immediate exile and total loss of property[cite: 337].</p>
+        <p>Running away from the militia line during a defensive battle is punishable by immediate exile and total loss of property.</p>
       </div>
 
       <h4>Chapter 2 — Public Peace and Neighborhood Rules</h4>
@@ -669,34 +1113,87 @@ li::marker {
       <h4>Chapter 3 — Public Goods and Infrastructure</h4>
       <div class="law-card">
         <h5>Article 34 — Road Maintenance</h5>
-        <p>Citizens are forbidden from digging up, destroying, or blocking public roads without explicit permission from the local district Lord[cite: 338].</p>
+        <p>Citizens are forbidden from digging up, destroying, or blocking public roads without explicit permission from the local district Lord.</p>
       </div>
       <div class="law-card">
         <h5>Article 35 — Vandalism of Signs</h5>
-        <p>Defacing or destroying official Crown notices, bounty boards, or street signs will result in mandatory cleanup duties and restitution fines[cite: 339].</p>
+        <p>Defacing or destroying official Crown notices, bounty boards, or street signs will result in mandatory cleanup duties and restitution fines.</p>
       </div>
       <div class="law-card">
         <h5>Article 36 — Spying and Espionage</h5>
-        <p>Passing internal VRC documents, economic secrets, or military defense plans to foreign states is treated as Foreign Collaboration[cite: 340].</p>
+        <p>Passing internal VRC documents, economic secrets, or military defense plans to foreign states is treated as Foreign Collaboration.</p>
       </div>
       <div class="law-card">
         <h5>Article 37 — Diplomatic Immunity</h5>
-        <p>Official ambassadors sent by allies (such as the Astari) cannot be arrested by the VIS without the King’s personal approval, unless they pose an immediate physical threat[cite: 341].</p>
+        <p>Official ambassadors sent by allies (such as the Astari) cannot be arrested by the VIS without the King's personal approval, unless they pose an immediate physical threat.</p>
       </div>
       <div class="law-card">
         <h5>Article 38 — Bilateral Treaty Violations</h5>
-        <p>Any Valorian merchant who intentionally breaks a terms-of-trade agreement signed between Valoria and an allied nation can have their trading license permanently revoked by the Court[cite: 342].</p>
+        <p>Any Valorian merchant who intentionally breaks a terms-of-trade agreement signed between Valoria and an allied nation can have their trading license permanently revoked by the Court.</p>
       </div>
 
       <h3>Closing Clause</h3>
-      <p>Let this Enlightened Codex stand as the ultimate shield of our realm[cite: 343]. It guarantees that Valoria remains an unmatched heaven of elite capitalist accumulation, a powerhouse of nationalist pride, and a safe, legally logical fortress of stability for every worker who drives our nation forward[cite: 343]. Sealed under the Crown[cite: 343].</p>
+      <p>Let this Enlightened Codex stand as the ultimate shield of our realm. It guarantees that Valoria remains an unmatched heaven of elite capitalist accumulation, a powerhouse of nationalist pride, and a safe, legally logical fortress of stability for every worker who drives our nation forward. Sealed under the Crown.</p>
 
-      <div class="wax-seal"></div>
+      <div class="wax-seal-container">
+        <div class="wax-seal-ribbon"></div>
+        <div class="wax-seal"></div>
+      </div>
     </section>
+
+    </div>
+    <div class="scroll-roll"></div>
   </div>
 
-  <div class="scroll-footer">© 2026 Kingdom of Valoria — All Rights Reserved | Sealed by the Authority of the Independent Royal Judiciary</div>
+  <div class="scroll-footer">© 2026 Königreich Valoria — All Rights Reserved | Sealed by the Authority of the Independent Royal Judiciary</div>
 </div>
+
+<!-- Scroll to top button -->
+<div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"></div>
+
+<script>
+// Generate floating embers
+const embersContainer = document.getElementById('embers');
+for (let i = 0; i < 25; i++) {
+  const ember = document.createElement('div');
+  ember.className = 'ember';
+  ember.style.left = Math.random() * 100 + '%';
+  ember.style.animationDelay = Math.random() * 8 + 's';
+  ember.style.animationDuration = (6 + Math.random() * 6) + 's';
+  ember.style.width = (2 + Math.random() * 3) + 'px';
+  ember.style.height = ember.style.width;
+  embersContainer.appendChild(ember);
+}
+
+// Scroll to top button visibility
+const scrollTopBtn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 500) {
+    scrollTopBtn.classList.add('visible');
+  } else {
+    scrollTopBtn.classList.remove('visible');
+  }
+});
+
+// Active nav tab highlighting
+const sections = document.querySelectorAll('section[id]');
+const navTabs = document.querySelectorAll('.nav-tab');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop;
+    if (window.scrollY >= sectionTop - 200) {
+      current = section.getAttribute('id');
+    }
+  });
+  navTabs.forEach(tab => {
+    tab.classList.remove('active');
+    if (tab.getAttribute('href') === '#' + current) {
+      tab.classList.add('active');
+    }
+  });
+});
+</script>
 
 </body>
 </html>
